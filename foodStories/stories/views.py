@@ -4,16 +4,25 @@ from django.http import HttpResponse
 
 
 def home(request):
-    return HttpResponse("Home")
+    return render( request , 'index.html')
 
 def about(request):
-    return HttpResponse("About")
+    return render( request , 'about.html')
 
 def stories(request):
-    return HttpResponse("Stories")
+    return render( request , 'stories.html')
 
 def recipes(request):
-    return HttpResponse("Recipes")
+    return render( request , 'recipes.html')
 
 def contact(request):
-    return HttpResponse("Contact")
+    return render( request , 'contact.html')
+
+def login(request):
+    return render(request, 'accounts/login.html' )
+
+def register(request):
+    return render(request, 'accounts/register.html' )
+
+def single(request):
+    return render(request, 'single.html')
