@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% block middle_container %}
-
-<section class="hero-wrap hero-wrap-2" style="background-image: url('images/bg_4.jpg');">
+{% load static %}
+<section class="hero-wrap hero-wrap-2" style="background-image: url({% static 'images/bg_4.jpg' %});">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text align-items-end justify-content-center">
             <div class="col-md-9 ftco-animate pb-5 text-center">
                 <h1 class="mb-3 bread">About Us</h1>
-                <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i
+                <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'home' %}">Home <i
                         class="ion-ios-arrow-forward"></i></a></span> <span>About us<i
                         class="ion-ios-arrow-forward"></i></span></p>
             </div>
@@ -19,7 +19,7 @@
     <div class="container">
         <div class="row d-flex">
             <div class="col-md-6 d-flex">
-                <div class="img d-flex align-self-stretch" style="background-image:url(images/about.jpg);"></div>
+                <div class="img d-flex align-self-stretch" style="background-image:url({% static 'images/about.jpg' %});"></div>
             </div>
             <div class="col-md-6 pl-md-5 py-5">
                 <div class="row justify-content-start pb-3">

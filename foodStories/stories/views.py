@@ -26,3 +26,23 @@ def register(request):
 
 def single(request):
     return render(request, 'single.html')
+
+def reset_password(request):
+    return render(request, 'accounts/reset_password.html')
+
+def change_password(request):
+    return render(request, 'accounts/change_password.html')
+    
+def forget_password(request):
+    return render(request, 'accounts/forget_password.html')
+
+def user_profile(request):
+    return render(request, 'user_profile.html')
+
+def create_story(request):
+    return render(request, 'create_story.html')
+
+def email_subscribers(request):
+    return render(request, 'email_subscribers.html')
+
+    
