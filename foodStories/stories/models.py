@@ -28,24 +28,28 @@ class Recipe(models.Model):
 class Author(models.Model):
     first_name = models.CharField(_("Name"), max_length=50)
     last_name = models.CharField(_("Surname"), max_length=50)
-    experience = models.IntegerField(_("Experience"))
-    bio = models.TextField(_("Biography"), default="")
-    graduated_from = models.CharField(_("Graduated"), max_length=50)
+    username = models.CharField(_("Username"), max_length=50 , blank=True)
+    email = models.EmailField(_("Email"), max_length=254, null=True)
+    password = models.CharField(_("Password"), max_length=50, null=True)
 
 class Category(models.Model):
     recipe_category = models.CharField(_("Recipe category"), max_length=50)
+    story_category = models.CharField(_("Story category"), max_length=50 , default='Foods')
     recipes = models.ManyToManyField("stories.Recipe", verbose_name=_("Recipes"))
+    stories = models.ManyToManyField("stories.Story", verbose_name=_("Story"))
     
 class Comment(models.Model):
     by = models.CharField(_("By"), max_length=50)
     description = models.TextField(_("Description"))
     commented_at = models.DateField(_("Commented at"), auto_now_add=True)
+    author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE, blank=True, null=True)
     recipe = models.ForeignKey("stories.Recipe", verbose_name=_("Recipe"), on_delete=models.CASCADE)
+    story = models.ForeignKey("stories.Story", verbose_name=_("Story"), on_delete=models.CASCADE, blank=True, null=True)
 
 class Comment_reply(models.Model):
     first_name = models.CharField(_("Name"), max_length=50)
     email = models.EmailField(_("Email"), max_length=254)
-    message = models.TextField(_("Message"))
+    content = models.TextField(_("Message"))
     comment = models.ForeignKey("stories.Comment", verbose_name=_("Comment"), on_delete=models.CASCADE)
     
     commented_at = models.DateField(_("Commented at"), auto_now_add=True)
