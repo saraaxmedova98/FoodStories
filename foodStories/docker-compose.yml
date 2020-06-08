@@ -13,7 +13,7 @@ services:
     environment:
       MYSQL_DATABASE: 'foodBlog'
       MYSQL_USER: 'sara'
-      MYSQL_PASSWORD: 'ouHQkltWnPhf0KVP'
+      MYSQL_PASSWORD: 'AfQwdXhJ1uynNV8sq'
       MYSQL_ROOT_PASSWORD: 'AfQwdXhJ1uynNV8sq'
       MYSQL_HOST: 'db'
 

@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils.translation import gettext as _
-import datetime
 # Create your models here.
 
 class Story(models.Model):
@@ -16,11 +15,12 @@ class Recipe(models.Model):
     description = models.TextField(_("Description"), default='')
     ingredients = models.TextField(_("Ingredients"))
     directions = models.TextField(_("Directions"), default="")
-    prepare_time = models.TimeField(_("Prepate time"), default= datetime.time(16, 00))
+    prepare_time = models.CharField(_("Prepare time"), max_length=50)
     recipe_image = models.ImageField(_("Image"), upload_to='partials/images')
 
+    category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True)
     authors = models.ManyToManyField("stories.Author", verbose_name=_("Authors"))
-    stories = models.ForeignKey("stories.Story", verbose_name=_("Story"), on_delete=models.CASCADE, null=True)
+    story = models.ForeignKey("stories.Story", verbose_name=_("Story"), on_delete=models.CASCADE, null=True)
 
     updated_at = models.DateField(_("Updated date"), auto_now=True)
     created_at = models.DateField(_("Created date"), auto_now_add=True)
@@ -35,7 +35,6 @@ class Author(models.Model):
 class Category(models.Model):
     recipe_category = models.CharField(_("Recipe category"), max_length=50)
     story_category = models.CharField(_("Story category"), max_length=50 , default='Foods')
-    recipes = models.ManyToManyField("stories.Recipe", verbose_name=_("Recipes"))
     stories = models.ManyToManyField("stories.Story", verbose_name=_("Story"))
     
 class Comment(models.Model):
