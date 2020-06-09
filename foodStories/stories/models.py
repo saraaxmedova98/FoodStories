@@ -5,6 +5,7 @@ from django.utils.translation import gettext as _
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=50)
     description = models.TextField(_("Description"), default='')
+    story_file = models.FileField(_("Story file"), upload_to="partials", max_length=100)
     author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE, null=True)
 
     updated_at = models.DateField(_("Updated date"), auto_now=True)
@@ -20,8 +21,7 @@ class Recipe(models.Model):
 
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True)
     authors = models.ManyToManyField("stories.Author", verbose_name=_("Authors"))
-    story = models.ForeignKey("stories.Story", verbose_name=_("Story"), on_delete=models.CASCADE, null=True)
-
+    
     updated_at = models.DateField(_("Updated date"), auto_now=True)
     created_at = models.DateField(_("Created date"), auto_now_add=True)
     
@@ -33,7 +33,6 @@ class Author(models.Model):
     password = models.CharField(_("Password"), max_length=50, null=True)
 
 class Category(models.Model):
-    recipe_category = models.CharField(_("Recipe category"), max_length=50)
     story_category = models.CharField(_("Story category"), max_length=50 , default='Foods')
     stories = models.ManyToManyField("stories.Story", verbose_name=_("Story"))
     
