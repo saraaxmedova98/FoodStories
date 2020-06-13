@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from stories.forms import ContactForm, SubscribeForm
 # Create your views here.
 
 
@@ -14,9 +15,6 @@ def stories(request):
 
 def recipes(request):
     return render( request , 'recipes.html')
-
-def contact(request):
-    return render( request , 'contact.html')
 
 def login(request):
     return render(request, 'accounts/login.html' )
@@ -45,4 +43,22 @@ def create_story(request):
 def email_subscribers(request):
     return render(request, 'email_subscribers.html')
 
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = ContactForm()
+        
+    return render( request , 'contact.html', {'form': form})
+
+def subscribe(request):
+    if request.method == 'POST':
+        form = SubscribeForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = SubscribeForm()
     
+    return render(request , 'subscribe.html' , {'form' : form})

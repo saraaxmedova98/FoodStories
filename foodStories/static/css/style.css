@@ -12779,3 +12779,7 @@ textarea.form-control {
         stroke-dashoffset: -136px;
     }
 }
+
+.resize{
+    resize: none;
+}
