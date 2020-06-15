@@ -7,7 +7,7 @@ class Story(models.Model):
     description = models.TextField(_("Description"), default='')
     story_image = models.FileField(_("Story file"), upload_to="story_images", max_length=100, blank=True, null=True)
 
-    author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE, null=True)
+    author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE, null=True, related_name='stories')
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True)
 
     updated_at = models.DateField(_("Updated date"), auto_now=True)
@@ -31,7 +31,7 @@ class Recipe(models.Model):
     recipe_image = models.ImageField(_("Image"), upload_to='recipe_images', blank=True, null=True)
 
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True)
-    authors = models.ManyToManyField("stories.Author", verbose_name=_("Authors"))
+    authors = models.ManyToManyField("stories.Author", verbose_name=_("Authors"), related_name='recipes')
     
     updated_at = models.DateField(_("Updated date"), auto_now=True)
     created_at = models.DateField(_("Created date"), auto_now_add=True)
@@ -105,6 +105,7 @@ class Contact(models.Model):
     email = models.EmailField(_("Email"), max_length=254)
     subject = models.CharField(_("Subject"), max_length=50, blank=True, null=True)
     message = models.TextField(_("Message"))
+    source = models.CharField(_("Source"), max_length=50, blank=True, null=True)
     contacted_at = models.DateField(_("Contacted at"), auto_now_add=True, blank= True, null=True)
     
     class Meta:

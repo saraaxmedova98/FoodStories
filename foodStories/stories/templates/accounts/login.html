@@ -8,13 +8,21 @@
         <div class="container">
             <div class="row block-9 justify-content-center">
                 <div class="col-md-6 order-md-last d-flex">
-                    <form action="#" class="bg-light p-5 contact-form">
+                    <form action="#" class="bg-light p-5 contact-form" method="POST">
+                    {% csrf_token %}
                         <a class="navbar-brand center" href="#">Stories<span>.</span></a>
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Username">
+                            {{form.email}}
+                            {{form.email.errors}}
                         </div>
                         <div class="form-group">
-                            <input type="text" class="form-control" placeholder="Password">
+                            {{form.password}}
+                            {{form.password.errors}}
+                        </div>
+                        <div class="form-group">
+                            {{form.remember}}
+                            {{form.remember.label_tag}}
+                            {{form.remember.errors}}
                         </div>
                         <div class="form-group">
                             <input type="submit" value="Login" class="btn btn-primary py-3 px-5">
