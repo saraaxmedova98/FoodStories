@@ -3,16 +3,25 @@ from django.http import HttpResponse
 from stories.forms import ContactForm, SubscribeForm, StoryForm, LoginForm
 from django.views import View
 # from django.shortcuts import redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from stories.models import Recipe, Story
 # Create your views here.
 
 
-def home(request):
-    return render( request , 'index.html')
+# def home(request):
+#     return render( request , 'index.html')
 
-def about(request):
-    return render( request , 'about.html')
+class HomeView(View):
+    template_name = "index.html"
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name)
+
+# def about(request):
+#     return render( request , 'about.html')
+
+class AboutView(TemplateView):
+    template_name = "about.html"
+    
 
 # def create_story(request):
 #     return render(request, 'create_story.html')
@@ -57,8 +66,8 @@ class RecipeDetail(DetailView):
     context_object_name = 'context'
     template_name='single.html'
 
-def login(request):
-    return render(request, 'accounts/login.html' )
+# def login(request):
+#     return render(request, 'accounts/login.html' )
 
 class LoginView(View):
     template_name = 'accounts/login.html'
