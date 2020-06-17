@@ -3,7 +3,8 @@ from django.http import HttpResponse
 from stories.forms import ContactForm, SubscribeForm, StoryForm, LoginForm
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView
-from stories.models import Recipe, Story, Category, Tag
+from stories.models import Recipe, Story, Category, Tag, Author
+from django.db.models import Count
 # Create your views here.
 
 
@@ -27,6 +28,14 @@ class HomeView(TemplateView):
 
 class AboutView(TemplateView):
     template_name = "about.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["recipes"] = Recipe.objects.annotate(Count('title'))
+        context['stories'] = Story.objects.annotate(Count('title'))
+        context['categories'] = Category.objects.all()[:3]
+        context['authors'] = Author.objects.annotate(Count('first_name'))
+        return context
     
 
 # def create_story(request):
