@@ -69,6 +69,14 @@ class StoryList(ListView):
         return context
 
 
+class StoryCategoryList(ListView):
+    context_object_name = 'stories'
+    template_name='stories.html'
+
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, title=self.kwargs['category'])
+        return Story.objects.filter(category=self.category)
+
 class StoryDetail(DetailView):
     model = Story
     context_object_name = 'story'

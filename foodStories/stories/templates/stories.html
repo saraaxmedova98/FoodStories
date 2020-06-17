@@ -84,7 +84,7 @@
                         <ul class="category-image">
                             {% for category in categories %}
                             <li>
-                                <a href="#" class="img d-flex align-items-center justify-content-center text-center"
+                                <a href="{% url 'category' category.title|lower %}" class="img d-flex align-items-center justify-content-center text-center"
                                    style="background-image: url({{category.image}});">
                                     <div class="text">
                                         <h3>{{category.title}}</h3>

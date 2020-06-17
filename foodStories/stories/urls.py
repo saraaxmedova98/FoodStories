@@ -21,7 +21,7 @@ urlpatterns = [
     path("create_story/", StoryView.as_view(), name="create_story"),
     path("email_subscribers/", email_subscribers, name="email_subscribers"),
     path("subscribe/", SubscribeView.as_view(), name="subscribe"),
-    # path("footer/", SiteSettingsView.as_view(), name="footer"),
+    path("stories/<category>", StoryList.as_view(), name="category"),
 
     
 ]
