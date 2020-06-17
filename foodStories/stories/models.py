@@ -1,12 +1,14 @@
 from django.db import models
 from django.utils.translation import gettext as _
+from taggit.managers import TaggableManager
 # Create your models here.
 
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=50)
     description = models.TextField(_("Description"), default='')
-    story_image = models.FileField(_("Story file"), upload_to="story_images", max_length=100, blank=True, null=True)
-
+    story_image = models.FileField(_("Story file"), upload_to="stories", max_length=100, blank=True, null=True)
+    # tags = TaggableManager()
+    
     author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE, null=True, related_name='stories')
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True)
 
@@ -28,7 +30,7 @@ class Recipe(models.Model):
     ingredients = models.TextField(_("Ingredients"))
     directions = models.TextField(_("Directions"), default="")
     prepare_time = models.CharField(_("Prepare time"), max_length=50)
-    recipe_image = models.ImageField(_("Image"), upload_to='recipe_images', blank=True, null=True)
+    recipe_image = models.ImageField(_("Recipe Image"), upload_to='recipes/', blank=True, null=True)
 
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True)
     authors = models.ManyToManyField("stories.Author", verbose_name=_("Authors"), related_name='recipes')
@@ -50,7 +52,7 @@ class Author(models.Model):
     email = models.EmailField(_("Email"), max_length=254, null=True)
     bio = models.TextField(_("Biography"), blank=True, null=True)
     password = models.CharField(_("Password"), max_length=50, null=True)
-    image = models.ImageField(_("Image"), upload_to='partials', blank=True, null=True)
+    image = models.ImageField(_("Image"), upload_to='authors/', blank=True, null=True)
     
     class Meta:
         verbose_name = 'Author'
@@ -61,7 +63,7 @@ class Author(models.Model):
     
 class Category(models.Model):
     title = models.CharField(_("Title"), max_length=50, default="")
-    image = models.ImageField(_("Image"), upload_to='partials', blank=True, null=True)
+    image = models.ImageField(_("Image"), upload_to='categories/', blank=True, null=True)
 
     class Meta:
         verbose_name = 'Category'
@@ -74,8 +76,8 @@ class Category(models.Model):
 class Tag(models.Model):
     title = models.CharField(_("Title"), max_length=50, blank=True, null=True)
 
-    stories = models.ManyToManyField("stories.Story", verbose_name=_("Story"))
-    recipes = models.ManyToManyField("stories.Recipe", verbose_name=_("Recipe"))
+    stories = models.ManyToManyField("stories.Story", verbose_name=_("Story"), related_name='tags')
+    recipes = models.ManyToManyField("stories.Recipe", verbose_name=_("Recipe"), related_name='tags')
     
     class Meta:
         verbose_name = 'Tag'
@@ -129,18 +131,16 @@ class Subscribe(models.Model):
         return self.email
 
 
-class FooterInfo(models.Model):
-    location = models.CharField(_("Location"), max_length=50)
+class SiteSettings(models.Model):
+    address = models.CharField(_("Location"), max_length=50)
     phone = models.CharField(_("Phone number"), max_length=50)
     email = models.EmailField(_("Email"), max_length=254)
+    website = models.URLField(_("Website"), max_length=200)
     facebook = models.URLField(_("Facebook"), max_length=200, blank=True, null=True)
     twitter = models.URLField(_("Twitter"), max_length=200, blank=True, null=True)
     instagram = models.URLField(_("Instagram"), max_length=200, blank=True, null=True)
     
 
-    class Meta:
-        verbose_name = _("FooterInfo")
-        verbose_name_plural = _("FooterInfos")
 
     def __str__(self):
         return self.email

@@ -2,19 +2,25 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from stories.forms import ContactForm, SubscribeForm, StoryForm, LoginForm
 from django.views import View
-# from django.shortcuts import redirect
 from django.views.generic import ListView, DetailView, TemplateView
-from stories.models import Recipe, Story
+from stories.models import Recipe, Story, Category, Tag
 # Create your views here.
 
 
 # def home(request):
 #     return render( request , 'index.html')
 
-class HomeView(View):
+class HomeView(TemplateView):
     template_name = "index.html"
-    def get(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["recipes"] = Recipe.objects.all()[:2]
+        context['stories'] = Story.objects.all()[:4]
+        context['categories'] = Category.objects.all()[:3]
+        return context
+    
 
 # def about(request):
 #     return render( request , 'about.html')
@@ -48,10 +54,24 @@ class StoryList(ListView):
     context_object_name = 'stories'
     template_name='stories.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()[:3]
+        return context
+
+
 class StoryDetail(DetailView):
     model = Story
-    context_object_name = 'context'
-    template_name='single.html'
+    context_object_name = 'story'
+    template_name='story_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        context['tags'] = Tag.objects.all()
+        context['stories'] = Story.objects.all()[:3]
+        return context
+    
 
 # def recipes(request):
 #     return render( request , 'recipes.html')
@@ -61,10 +81,23 @@ class RecipeList(ListView):
     context_object_name = 'recipes'
     template_name='recipes.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()[:3]
+        return context
+    
+
 class RecipeDetail(DetailView):
     model = Recipe
-    context_object_name = 'context'
-    template_name='single.html'
+    context_object_name = 'recipe'
+    template_name='recipe_detail.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        context['tags'] = Tag.objects.all()
+        context['recipes'] = Recipe.objects.all()[:3]
+        return context
 
 # def login(request):
 #     return render(request, 'accounts/login.html' )
@@ -133,27 +166,30 @@ class ContactView(View):
         
         return render( request , self.template_name, {'form': form})
 
+# class CatStorList(ListView):
+#     model = Category
+#     context_object_name = ''
+#     template_name=''
 
-def subscribe(request):
-    if request.method == 'POST':
-        form = SubscribeForm(request.POST)
-        if form.is_valid():
-            form.save()
-    else:
-        form = SubscribeForm()
+
+# def subscribe(request):
+#     if request.method == 'POST':
+#         form = SubscribeForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#     else:
+#         form = SubscribeForm()
     
-    return render(request , 'subscribe.html' , {'form' : form})
+#     return render(request , 'subscribe.html' , {'form' : form})
 
 class SubscribeView(View):
     form_class = SubscribeForm
-    template_name = 'subscribe.html'
-    def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render(request , self.template_name , {'form' : form})
-
+ 
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/')
-        return render(request , 'subscribe.html' , {'form' : form})
+
+       
+
+  

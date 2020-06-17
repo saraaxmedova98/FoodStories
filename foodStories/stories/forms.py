@@ -6,6 +6,7 @@ class StoryForm(forms.ModelForm):
     
     class Meta:
         model = Story
+        tags = Story.objects.all()
         fields = ("title",'description', 'category', 'story_image',)
         widgets = {
             'title': forms.TextInput(attrs={
@@ -15,6 +16,10 @@ class StoryForm(forms.ModelForm):
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'placeholder' : 'Description'
+            }),
+            'tag_list': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder' : 'Tags'
             }),
             'category': forms.Select(attrs={
                 'class': 'form-control',

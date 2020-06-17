@@ -62,8 +62,10 @@
                         <div class="icon d-flex align-items-center justify-content-center">
                             <span class="icon-map-signs"></span>
                         </div>
+                        {% load custom-tags %}
+                        {% site_settings as settings%}
                         <h3 class="mb-4">Address</h3>
-                        <p>198 West 21th Street, Suite 721 New York NY 10016</p>
+                        <p>{{ settings.address }}</p>
                     </div>
                 </div>
                 <div class="col-md-3 d-flex">
@@ -72,7 +74,7 @@
                             <span class="icon-phone2"></span>
                         </div>
                         <h3 class="mb-4">Contact Number</h3>
-                        <p><a href="tel://1234567920">+ 1235 2355 98</a></p>
+                        <p><a href="tel://1234567920">{{settings.phone}}</a></p>
                     </div>
                 </div>
                 <div class="col-md-3 d-flex">
@@ -81,7 +83,7 @@
                             <span class="icon-paper-plane"></span>
                         </div>
                         <h3 class="mb-4">Email Address</h3>
-                        <p><a href="mailto:info@yoursite.com">info@yoursite.com</a></p>
+                        <p><a href="mailto:info@yoursite.com">{{settings.email}}</a></p>
                     </div>
                 </div>
                 <div class="col-md-3 d-flex">
@@ -90,7 +92,7 @@
                             <span class="icon-globe"></span>
                         </div>
                         <h3 class="mb-4">Website</h3>
-                        <p><a href="#">yoursite.com</a></p>
+                        <p><a href="#">{{settings.website}}</a></p>
                     </div>
                 </div>
             </div>

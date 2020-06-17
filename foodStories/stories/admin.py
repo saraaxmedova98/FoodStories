@@ -1,5 +1,5 @@
 from django.contrib import admin
-from stories.models import Author,Contact, Recipe, Comment, Story , Tag, Category, Subscribe, FooterInfo
+from stories.models import Author,Contact, Recipe, Comment, Story , Tag, Category, Subscribe, SiteSettings
 
 
 @admin.register(Contact)
@@ -58,7 +58,7 @@ class StoryAdmin(admin.ModelAdmin):
             "fields": ('title',),
         }),
         ('Optional Fields', {
-            "fields": ('description','story_image',),
+            "fields": ('description','story_image'),
             'classes': ('collapse',),
 
         }),
@@ -142,12 +142,24 @@ class SubscribeAdmin(admin.ModelAdmin):
     list_filter = ['subscribed_at']
     
 
-@admin.register(FooterInfo)
-class FooterInfoAdmin(admin.ModelAdmin):
-    list_display = ['location', 'phone', 'email', 'facebook', 'twitter', 'instagram']
+@admin.register(SiteSettings)
+class SiteSettingsAdmin(admin.ModelAdmin):
+    list_display = ['address', 'phone', 'email','website', 'facebook', 'twitter', 'instagram']
     ordering = ['email']
     search_fields = ['email', 'location']
 
+    # MAX_OBJECTS = 1
+
+    # def has_add_permission(self, request):
+    #     if self.model.objects.count() >= MAX_OBJECTS:
+    #         return False
+    #     return super().has_add_permission(request)
+    def has_add_permission(self, request):
+        num_objects = self.model.objects.count()
+        if num_objects >= 1:
+            return False
+        else:
+            return True
     
 
 
