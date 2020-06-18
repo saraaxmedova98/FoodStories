@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from stories.models import Contact, Subscribe, Story, Recipe
+from stories.models import Contact, Subscribe, Story, Recipe, Comment
 from django.core.mail import send_mail  
 
 class StoryForm(forms.ModelForm):
@@ -120,6 +120,25 @@ class SubscribeForm(forms.ModelForm):
                 }
             )
         }
+
+class CommentForm(forms.ModelForm):
+    
+    class Meta:
+        model = Comment
+        fields = ("name",'email', 'message',)
+        widgets={
+            'name': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder' : 'Your Name'}),
+            'email': forms.EmailInput(attrs={
+                'class': 'form-control',
+                'placeholder' : 'Your Email'}),
+            'message': forms.Textarea(attrs={
+                'class': 'form-control resize',
+                'placeholder' : 'Message'}),            
+        }
+
+
 
 class LoginForm(forms.Form):
     email = forms.EmailField(required=True)

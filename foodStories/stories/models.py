@@ -98,6 +98,8 @@ class Tag(models.Model):
         return self.title
 
 class Comment(models.Model):
+    name = models.CharField(_("Name"), max_length=50, default='user')
+    email = models.EmailField(_("Email"), max_length=254, default='user@gmail.com')
     message = models.TextField(_("Description"))
     commented_at = models.DateField(_("Commented at"), auto_now_add=True)
     

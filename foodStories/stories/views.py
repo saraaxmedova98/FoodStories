@@ -1,12 +1,12 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
-from stories.forms import ContactForm, SubscribeForm, StoryForm, LoginForm, RecipeForm
+from stories.forms import ContactForm, SubscribeForm, StoryForm, LoginForm, RecipeForm, CommentForm
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView
-from stories.models import Recipe, Story, Category, Tag, Author
+from stories.models import Recipe, Story, Category, Tag, Author, Contact, Comment
 from django.db.models import Count
 from django.utils import timezone
-from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView, FormMixin
 from django.core.mail import send_mail
 from django.contrib import messages
 from django.urls import reverse_lazy
@@ -93,9 +93,6 @@ class StoryDeleteView(DeleteView):
 #         return render(request, self.template_name, {'form' : form})
 
 
-# def stories(request):
-#     return render( request , 'stories.html')
-
 class StoryList(ListView):
     model = Story
     context_object_name = 'stories'
@@ -166,10 +163,13 @@ class RecipeCategoriesList(ListView):
         return Recipe.objects.filter(category=self.category)
     
 
-class RecipeDetail(DetailView):
+class RecipeDetail(FormMixin ,DetailView):
     model = Recipe
     context_object_name = 'recipe'
     template_name='recipe_detail.html'
+    form_class = CommentForm
+
+
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -183,6 +183,21 @@ class RecipeDetail(DetailView):
         recipe_count.recipe_count += 1
         recipe_count.save()
         return recipe_count
+
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        # Here, we would record the user's interest using the message
+        # passed in form.cleaned_data['message']
+        return super().form_valid(form)
 
 class RecipeCreateView(CreateView):
     model = Recipe
@@ -246,16 +261,19 @@ def email_subscribers(request):
 
 
 
-def contact(request):
-    if request.method == 'POST':
-        form = ContactForm(request.POST)
-        if form.is_valid():
-            form.save()
-    else:
-        form = ContactForm()
-        
-    return render( request , 'contact.html', {'form': form})
+class ContactCreateView(CreateView):
+    model = Contact
+    template_name = "contact.html"
+    form_class = ContactForm
+    success_url = reverse_lazy('home')
 
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Something went wrong!!')
+        return super().form_invalid(form)
 
 class ContactFormView(FormView):
     template_name = 'contact.html'
@@ -282,47 +300,18 @@ class ContactFormView(FormView):
         #     fail_silently=False
         # )
         return super().form_valid(form)
-# class ContactView(View):
-#     template_name = 'contact.html'
-#     form_class = ContactForm
-#     def get(self, request, *args, **kwargs):
-#         form = self.form_class()
-#         return render( request , self.template_name, {'form': form})
 
-#     def post(self, request, *args, **kwargs):
-#         form = self.form_class(request.POST)
-#         # print(request.POST)
-#         if form.is_valid():
-#             name = form.cleaned_data['name']
-#             print(name)
-#             form.save()
-#             return redirect('/')
-        
-#         return render( request , self.template_name, {'form': form})
-
-# class CatStorList(ListView):
-#     model = Category
-#     context_object_name = ''
-#     template_name=''
-
-
-# def subscribe(request):
-#     if request.method == 'POST':
-#         form = SubscribeForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#     else:
-#         form = SubscribeForm()
-    
-#     return render(request , 'subscribe.html' , {'form' : form})
 
 class SubscribeView(View):
     form_class = SubscribeForm
+    
  
     def post(self, request, *args, **kwargs):
         form = self.form_class(request.POST)
         if form.is_valid():
             form.save()
+
+
 
        
 
