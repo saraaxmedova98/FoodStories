@@ -87,7 +87,26 @@
 		});
 	};
 	carousel();
-
+	$('.owl-carousel').owlCarousel({
+		loop: true,
+		animateOut: 'fadeOut',
+	    nav:true,
+	    autoplayHoverPause: false,
+		autoplay: true,
+		dots: false,
+		responsive: {
+			1: {
+				items: 1,
+				dots: false
+			},
+			600: {
+				items: 1
+			},
+			1000: {
+				items: 1
+			}
+		}
+	})
 	$('nav .dropdown').hover(function(){
 		var $this = $(this);
 		// 	 timer;

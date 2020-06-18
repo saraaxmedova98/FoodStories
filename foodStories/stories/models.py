@@ -1,12 +1,14 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from taggit.managers import TaggableManager
+from django.urls import reverse
 # Create your models here.
 
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=50)
     description = models.TextField(_("Description"), default='')
     story_image = models.FileField(_("Story file"), upload_to="stories", max_length=100, blank=True, null=True)
+    story_count = models.IntegerField(_("Story count"), default=0)
     # tags = TaggableManager()
     
     author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE, null=True, related_name='stories')
@@ -23,6 +25,9 @@ class Story(models.Model):
     def __str__(self):
         return self.title
     
+    def get_absolute_url(self):
+        return reverse('story_detail', kwargs={'pk': self.pk})
+
 
 class Recipe(models.Model):
     title = models.CharField(_("Title"), max_length=50)
@@ -31,6 +36,7 @@ class Recipe(models.Model):
     directions = models.TextField(_("Directions"), default="")
     prepare_time = models.CharField(_("Prepare time"), max_length=50)
     recipe_image = models.ImageField(_("Recipe Image"), upload_to='recipes/', blank=True, null=True)
+    recipe_count = models.IntegerField(_("Recipe count"), default=0)
 
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True)
     authors = models.ManyToManyField("stories.Author", verbose_name=_("Authors"), related_name='recipes')
@@ -44,6 +50,9 @@ class Recipe(models.Model):
 
     def __str__(self):
         return self.title
+
+    def get_absolute_url(self):
+        return reverse('recipe_detail', kwargs={'pk': self.pk})
     
 class Author(models.Model):
     first_name = models.CharField(_("Name"), max_length=50)
@@ -71,6 +80,8 @@ class Category(models.Model):
 
     def __str__(self):
         return self.title
+    
+    
     
     
 class Tag(models.Model):

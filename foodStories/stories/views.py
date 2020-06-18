@@ -1,10 +1,15 @@
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
-from stories.forms import ContactForm, SubscribeForm, StoryForm, LoginForm
+from stories.forms import ContactForm, SubscribeForm, StoryForm, LoginForm, RecipeForm
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView
 from stories.models import Recipe, Story, Category, Tag, Author
 from django.db.models import Count
+from django.utils import timezone
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
+from django.core.mail import send_mail
+from django.contrib import messages
+from django.urls import reverse_lazy
 # Create your views here.
 
 
@@ -31,28 +36,61 @@ class AboutView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["recipes"] = Recipe.objects.annotate(Count('title'))
-        context['stories'] = Story.objects.annotate(Count('title'))
+        context["recipes"] = Recipe.objects.all()
+        context['stories'] = Story.objects.all()
         context['categories'] = Category.objects.all()[:3]
-        context['authors'] = Author.objects.annotate(Count('first_name'))
+        context['authors'] = Author.objects.all()
         return context
-    
 
-# def create_story(request):
-#     return render(request, 'create_story.html')
+# class StoryFormView(FormView):
+#     template_name = 'create_story.html'
+#     form_class = StoryForm
+#     success_url = '/'
 
-class StoryView(View):
-    template_name = 'create_story.html'
+#     def form_valid(self, form):
+#         form.save()
+#         return super().form_valid(form)
+
+#     def form_invalid(self, form):
+#         messages.warning(self.request, 'Something went wrong!!')
+#         return super().form_invalid(form)
+
+class StoryCreateView(CreateView):
+    model = Story
+    template_name = "create_story.html"
+    # fields = ['title', 'description', 'story_image', 'category']
     form_class = StoryForm
-    def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render(request, self.template_name, {'form' : form})
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            form.save()
-        return render(request, self.template_name, {'form' : form})
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Something went wrong!!')
+        return super().form_invalid(form)
+
+class StoryUpdateView(UpdateView):
+    model = Story
+    template_name = "create_story.html"
+    form_class = StoryForm
+
+class StoryDeleteView(DeleteView):
+    model = Story
+    template_name = "delete_story.html"
+    success_url = reverse_lazy('stories')
+
+
+# class StoryView(View):
+#     template_name = 'create_story.html'
+#     form_class = StoryForm
+#     def get(self, request, *args, **kwargs):
+#         form = self.form_class()
+#         return render(request, self.template_name, {'form' : form})
+
+#     def post(self, request, *args, **kwargs):
+#         form = self.form_class(request.POST)
+#         if form.is_valid():
+#             form.save()
+#         return render(request, self.template_name, {'form' : form})
 
 
 # def stories(request):
@@ -73,9 +111,15 @@ class StoryCategoryList(ListView):
     context_object_name = 'stories'
     template_name='stories.html'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()[:3]
+        return context
+
     def get_queryset(self):
         self.category = get_object_or_404(Category, title=self.kwargs['category'])
         return Story.objects.filter(category=self.category)
+        # return Story.objects.filter(category=self.kwargs['category'])
 
 class StoryDetail(DetailView):
     model = Story
@@ -88,10 +132,12 @@ class StoryDetail(DetailView):
         context['tags'] = Tag.objects.all()
         context['stories'] = Story.objects.all()[:3]
         return context
-    
 
-# def recipes(request):
-#     return render( request , 'recipes.html')
+    def get_object(self):
+        story_count = super().get_object()
+        story_count.story_count += 1
+        story_count.save()
+        return story_count
 
 class RecipeList(ListView):
     model = Recipe
@@ -100,8 +146,24 @@ class RecipeList(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()
+        return context
+
+
+class RecipeCategoriesList(ListView):
+   
+    context_object_name = 'recipes'
+    template_name='recipes.html'  
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()[:3]
         return context
+
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, title=self.kwargs['category'])
+        return Recipe.objects.filter(category=self.category)
     
 
 class RecipeDetail(DetailView):
@@ -112,12 +174,41 @@ class RecipeDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
-        context['tags'] = Tag.objects.all()
         context['recipes'] = Recipe.objects.all()[:3]
         return context
 
-# def login(request):
-#     return render(request, 'accounts/login.html' )
+    def get_object(self):
+        recipe_count = super().get_object()
+        # Record the last accessed date
+        recipe_count.recipe_count += 1
+        recipe_count.save()
+        return recipe_count
+
+class RecipeCreateView(CreateView):
+    model = Recipe
+    template_name = "create_recipe.html"
+    form_class = RecipeForm
+
+    def form_valid(self, form):
+        form.save()
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Something went wrong!!')
+        return super().form_invalid(form)
+
+class RecipeUpdateView(UpdateView):
+    model = Recipe
+    template_name = "create_recipe.html"
+    form_class = RecipeForm
+
+
+class RecipeDeleteView(DeleteView):
+    model = Recipe
+    template_name = "delete_recipe.html"
+    success_url = reverse_lazy('recipes')
+
+
 
 class LoginView(View):
     template_name = 'accounts/login.html'
@@ -165,23 +256,49 @@ def contact(request):
         
     return render( request , 'contact.html', {'form': form})
 
-class ContactView(View):
+
+class ContactFormView(FormView):
     template_name = 'contact.html'
     form_class = ContactForm
-    def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render( request , self.template_name, {'form': form})
+    success_url = '/'
 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        # print(request.POST)
-        if form.is_valid():
-            name = form.cleaned_data['name']
-            print(name)
-            form.save()
-            return redirect('/')
+    def form_valid(self, form):
+        # This method is called when valid form data has been POSTed.
+        # It should return an HttpResponse.
+        message = "{name} / {email} said: ".format(
+        name=form.cleaned_data.get('name'),
+        email=form.cleaned_data.get('email'))
+        message += "\n\n{0}".format(form.cleaned_data.get('message'))
+        send_mail(
+        subject=form.cleaned_data.get('subject').strip(),
+        message=message,
+        from_email='sara.axmedova98@gmail.com',
+        recipient_list=[settings.LIST_OF_EMAIL_RECIPIENTS],
+        )
+        #     'Subject',
+        #     'Email message',
+        #     'sara.axmedova98@gmail.com',
+        #     ['sara.axmedova98@gmail.com'],
+        #     fail_silently=False
+        # )
+        return super().form_valid(form)
+# class ContactView(View):
+#     template_name = 'contact.html'
+#     form_class = ContactForm
+#     def get(self, request, *args, **kwargs):
+#         form = self.form_class()
+#         return render( request , self.template_name, {'form': form})
+
+#     def post(self, request, *args, **kwargs):
+#         form = self.form_class(request.POST)
+#         # print(request.POST)
+#         if form.is_valid():
+#             name = form.cleaned_data['name']
+#             print(name)
+#             form.save()
+#             return redirect('/')
         
-        return render( request , self.template_name, {'form': form})
+#         return render( request , self.template_name, {'form': form})
 
 # class CatStorList(ListView):
 #     model = Category

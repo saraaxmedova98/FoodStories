@@ -225,16 +225,16 @@
                     <ul class="categories">
                         <h3 class="heading mb-4">Categories</h3>
                         {% for category in categories %}
-                        <li><a href="#">{{category.title}} <span>(12)</span></a></li>
+                        <li><a href="{% url 'recipe_category' category.title|lower %}">{{category.title}} <span>(12)</span></a></li>
                         {% endfor %}
                     </ul>
                 </div>
 
                 <div class="sidebar-box ftco-animate">
-                    <h3 class="heading mb-4">Recent Blog</h3>
+                    <h3 class="heading mb-4">Recent Recipes</h3>
                     {% for recipe in recipes %}
                     <div class="block-21 mb-4 d-flex">
-                        <a class="blog-img mr-4" style="background-image: url(images/image_1.jpg);"></a>
+                        <a class="blog-img mr-4" style="background-image: url('{{recipe.recipe_image.url}}');"></a>
                         <div class="text">
                             <h3><a href="#">{{recipe.title}}</a></h3>
                             <div class="meta">

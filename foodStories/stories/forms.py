@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
-from stories.models import Contact, Subscribe, Story
+from stories.models import Contact, Subscribe, Story, Recipe
+from django.core.mail import send_mail  
 
 class StoryForm(forms.ModelForm):
     
@@ -14,7 +15,7 @@ class StoryForm(forms.ModelForm):
                 'placeholder' : 'Title'
             }),
             'description': forms.Textarea(attrs={
-                'class': 'form-control',
+                'class': 'form-control resize',
                 'placeholder' : 'Description'
             }),
             'tag_list': forms.TextInput(attrs={
@@ -27,8 +28,51 @@ class StoryForm(forms.ModelForm):
             # 'story_image': forms.ClearableFileInput()
 
         }
+       
+            
+class RecipeForm(forms.ModelForm):
+    
+    class Meta:
+        model = Recipe
+        fields = ("title",'description','ingredients','directions', 'category','prepare_time', 'recipe_image')
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder' : 'Title'
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control resize',
+                'placeholder' : 'Description'
+            }),
+            'ingredients': forms.Textarea(attrs={
+                'class': 'form-control resize',
+                'placeholder' : 'Ingredients'
+            }),
+            'directions': forms.Textarea(attrs={
+                'class': 'form-control resize',
+                'placeholder' : 'Directions'
+            }),
+            'prepare_time': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder' : 'Prepare time'
+            }),
+            'category': forms.Select(attrs={
+                'class': 'form-control',
+            })
+            # 'story_image': forms.ClearableFileInput()
 
+        }
 
+    # def clean_title(self):
+    #     title = self.cleaned_data["title"]
+    #     recipe_exists = Recipe.objects.filter(title = title).exclude(pk = self.instance.pk)
+    #     if self.instance and self.instance.pk and not recipe_exists:
+    #         return title
+    #     else:
+    #         raise forms.ValidationError("Recipe already exists")
+       
+
+  
 class ContactForm(forms.ModelForm):
     
     class Meta:
@@ -47,10 +91,21 @@ class ContactForm(forms.ModelForm):
                 'placeholder' : 'Subject'}),
             'message': forms.Textarea(attrs={
                 'class': 'form-control resize',
-                'placeholder' : 'Message'}),
-            
-            
+                'placeholder' : 'Message'}),            
         }
+
+        # def send_mail(self)
+        #     return('Subject here',
+        #      'Here  the message.',
+        #       'sara.axmedova98@gmail.com',
+        #        ['sara.axmedova98@gmail.com'],
+        #         fail_silently=False)
+        # def send_email(self):
+        #     'Subject',
+        #     'Email message',
+        #     'sara.axmedova98@gmail.com',
+        #     ['sara.axmedova98@gmail.com'],
+        #     fail_silently=False
 
 class SubscribeForm(forms.ModelForm):
     
