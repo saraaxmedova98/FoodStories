@@ -7,8 +7,7 @@ class StoryForm(forms.ModelForm):
     
     class Meta:
         model = Story
-        tags = Story.objects.all()
-        fields = ("title",'description', 'category', 'story_image',)
+        fields = ("title",'description', 'category','tags', 'story_image',)
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -18,9 +17,10 @@ class StoryForm(forms.ModelForm):
                 'class': 'form-control resize',
                 'placeholder' : 'Description'
             }),
-            'tag_list': forms.TextInput(attrs={
+            'tags': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder' : 'Tags'
+                'placeholder' : 'Tags',
+                'data-role': 'tagsinput'
             }),
             'category': forms.Select(attrs={
                 'class': 'form-control',
@@ -94,18 +94,6 @@ class ContactForm(forms.ModelForm):
                 'placeholder' : 'Message'}),            
         }
 
-        # def send_mail(self)
-        #     return('Subject here',
-        #      'Here  the message.',
-        #       'sara.axmedova98@gmail.com',
-        #        ['sara.axmedova98@gmail.com'],
-        #         fail_silently=False)
-        # def send_email(self):
-        #     'Subject',
-        #     'Email message',
-        #     'sara.axmedova98@gmail.com',
-        #     ['sara.axmedova98@gmail.com'],
-        #     fail_silently=False
 
 class SubscribeForm(forms.ModelForm):
     
@@ -138,14 +126,3 @@ class CommentForm(forms.ModelForm):
                 'placeholder' : 'Message'}),            
         }
 
-
-
-class LoginForm(forms.Form):
-    email = forms.EmailField(required=True)
-    email.widget = forms.EmailInput(attrs={'class': 'form-control','placeholder' : 'Username'})
-    password = forms.CharField(max_length=50, required=True)
-    password.widget=forms.PasswordInput(attrs={'class': 'form-control','placeholder' : 'Password'})
-    remember = forms.BooleanField(label='Check me out',required=False)
-
-
-    

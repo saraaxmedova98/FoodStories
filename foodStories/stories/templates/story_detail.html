@@ -186,29 +186,28 @@
 
                     <div class="comment-form-wrap pt-5">
                         <h3 class="mb-5">Leave a comment</h3>
-                        <form action="#" class="p-5 bg-light">
-                            <div class="form-group">
-                                <label for="name">Name *</label>
-                                <input type="text" class="form-control" id="name">
-                            </div>
-                            <div class="form-group">
-                                <label for="email">Email *</label>
-                                <input type="email" class="form-control" id="email">
-                            </div>
-                            <div class="form-group">
-                                <label for="website">Website</label>
-                                <input type="url" class="form-control" id="website">
-                            </div>
-
-                            <div class="form-group">
-                                <label for="message">Message</label>
-                                <textarea name="" id="message" cols="30" rows="10" class="form-control"></textarea>
-                            </div>
-                            <div class="form-group">
-                                <input type="submit" value="Post Comment" class="btn py-3 px-4 btn-primary">
-                            </div>
-
-                        </form>
+                        <form class="p-5 bg-light" method="POST">
+                            {% csrf_token %}    
+                                <div class="form-group">
+                                    {{form.name.label_tag}}
+                                    {{form.name}}
+                                    {{form.name.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.email.label_tag}}
+                                    {{form.email}}
+                                    {{form.email.errors}}
+                                </div>
+                                <div class="form-group">
+                                    {{form.message.label_tag}}
+                                    {{form.message}}
+                                    {{form.message.errors}}
+                                </div>
+                                <div class="form-group">
+                                    <input type="submit" value="Post Comment" class="btn py-3 px-4 btn-primary">
+                                </div>
+    
+                            </form>
                     </div>
                 </div>
 
@@ -226,7 +225,7 @@
                     <ul class="categories">
                         <h3 class="heading mb-4">Categories</h3>
                         {% for category in categories %}
-                        <li><a href="{% url 'story_category' category.title|lower %}">{{category.title}} <span>{{category.stories}}</span></a></li>
+                        <li><a href="{% url 'story_category' category.title|lower %}">{{category.title}} <span>{{category.stories.count}}</span></a></li>
                         {% endfor %}
                         
                     </ul>
@@ -253,6 +252,9 @@
                 <div class="sidebar-box ftco-animate">
                     <h3 class="heading mb-4">Tag Cloud</h3>
                     <div class="tagcloud">
+                    {% for story in stories %}
+                     <a href="#" class="tag-cloud-link">{{story.tags}}</a>
+                    {% endfor %}
                         <a href="#" class="tag-cloud-link">dish</a>
                         <a href="#" class="tag-cloud-link">menu</a>
                         <a href="#" class="tag-cloud-link">food</a>

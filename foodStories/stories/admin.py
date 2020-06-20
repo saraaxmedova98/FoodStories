@@ -1,5 +1,5 @@
 from django.contrib import admin
-from stories.models import Author,Contact, Recipe, Comment, Story , Tag, Category, Subscribe, SiteSettings
+from stories.models import Contact, Recipe, Comment, Story , Tag, Category, Subscribe, SiteSettings
 
 
 @admin.register(Contact)
@@ -25,23 +25,23 @@ class ContactAdmin(admin.ModelAdmin):
 #         queryset.update(username = 'user')
 # change_user.short_description = 'change username'
 
-@admin.register(Author)
-class AuthorAdmin(admin.ModelAdmin):
-    list_display=['first_name', 'last_name', 'username', 'email']
-    ordering=['first_name']
-    search_fields = ['first_name', 'username']
-    list_filter = ['username']
-    actions = ['change_user']
-    fieldsets = (
-        ('Required Fields', {
-            "fields": ('first_name','last_name', 'email', 'password'),
-        }),
-        ('Optional Fields', {
-            "fields": ('username','bio','image',),
-            'classes': ('collapse',),
-        }),
+# @admin.register(Author)
+# class AuthorAdmin(admin.ModelAdmin):
+#     list_display=['first_name', 'last_name', 'username', 'email']
+#     ordering=['first_name']
+#     search_fields = ['first_name', 'username']
+#     list_filter = ['username']
+#     actions = ['change_user']
+#     fieldsets = (
+#         ('Required Fields', {
+#             "fields": ('first_name','last_name', 'email', 'password'),
+#         }),
+#         ('Optional Fields', {
+#             "fields": ('username','bio','image',),
+#             'classes': ('collapse',),
+#         }),
     
-    )
+#     )
 
     def change_user( self, request, queryset):
         queryset.update(username = 'user')
@@ -49,10 +49,10 @@ class AuthorAdmin(admin.ModelAdmin):
 
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
-    list_display = ['title', 'description', 'story_image', 'author', 'category']
+    list_display = ['title', 'description', 'story_image', 'category']
     ordering = ['title']
     search_fields = ['title']
-    list_filter = ['created_at','author', 'category']
+    list_filter = ['created_at', 'category']
     fieldsets = (
         ('Required Fields', {
             "fields": ('title',),
@@ -63,7 +63,7 @@ class StoryAdmin(admin.ModelAdmin):
 
         }),
         ('Relational Fields', {
-            "fields": ('category','author',),
+            "fields": ('category',),
             'classes': ('collapse',),
         }),
 
@@ -86,7 +86,7 @@ class RecipeAdmin(admin.ModelAdmin):
 
         }),
         ('Relational Fields', {
-            "fields": ('category','authors',),
+            "fields": ('category',),
             'classes': ('collapse',),
         }),
 
@@ -95,16 +95,16 @@ class RecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['message', 'author', 'recipe', 'story']
+    list_display = ['message', 'recipe', 'story']
     ordering = ['message']
     search_fields = ['message']
-    list_filter = ['commented_at','author', 'recipe', 'story']
+    list_filter = ['commented_at', 'recipe', 'story']
     fieldsets = (
         ('Required Fields', {
             "fields": ('message',),
         }),
         ('Relational Fields', {
-            "fields": ('comment_reply','author','recipe', 'story',),
+            "fields": ('comment_reply','recipe', 'story',),
             'classes': ('collapse',),
         }),
 

@@ -31,14 +31,17 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'taggit',
+    'jet',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'stories'
+    'taggit',
+    'stories',
+    'account',
+    
 ]
 
 MIDDLEWARE = [
@@ -69,6 +72,8 @@ TEMPLATES = [
     },
 ]
 
+AUTH_USER_MODEL = 'account.CustomUser'
+
 WSGI_APPLICATION = 'foodStories.wsgi.application'
 
 
@@ -77,12 +82,12 @@ WSGI_APPLICATION = 'foodStories.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'foodBlog',
-        'USER': 'sara',
-        'PASSWORD': 'ouHQkltWnPhf0KVP',
-        'HOST': '127.0.0.1',
-        'PORT': '3307',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'db_name',
+        'USER': 'db_user',
+        'PASSWORD': 'SvYbm5l5BVhw2WEB7XPYBMKI',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -135,8 +140,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT: 587
-EMAIL_HOST_USER: 'sara.axmedova98@gmail.com'
-EMAIL_HOST_PASSWORD: '66!!sara!!66'
+EMAIL_HOST_USER: ''
+EMAIL_HOST_PASSWORD: ''
 EMAIL_USE_TLS: True
 EMAIL_USE_SSL: False
 LIST_OF_EMAIL_RECIPIENTS = ['sara.axmedova98@gmail.com']

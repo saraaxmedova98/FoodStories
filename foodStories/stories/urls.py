@@ -1,7 +1,7 @@
 from django.urls import path
 from stories.views import register,single,reset_password,change_password,\
     forget_password,user_profile,email_subscribers,ContactCreateView, SubscribeView, RecipeList, \
-    RecipeDetail, StoryList,StoryDetail, StoryCreateView, StoryUpdateView, LoginView, AboutView,\
+    RecipeDetail, StoryList,StoryDetail, StoryCreateView, StoryUpdateView, AboutView,\
          HomeView, StoryCategoryList, RecipeCategoriesList, RecipeCreateView, RecipeUpdateView, \
              RecipeDeleteView, StoryDeleteView
 
@@ -21,7 +21,7 @@ urlpatterns = [
     path('recipe/update/<int:pk>', RecipeUpdateView.as_view(), name='update_recipe'),
     path('recipe/delete/<int:pk>', RecipeDeleteView.as_view(), name='delete_recipe'),
     path('contact/', ContactCreateView.as_view() , name='contact' ),
-    path('login/', LoginView.as_view(), name='login' ),
+    # path('login/', LoginView.as_view(), name='login' ),
     path('register/', register, name='register' ),
     path('single/', single, name='single' ),
     path("reset_password/", reset_password, name="reset_password"),

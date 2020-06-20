@@ -11,4 +11,4 @@ def subscribe_form():
 
 @register.simple_tag
 def site_settings():
-    return SiteSettings.objects.get(pk=1)
+    return SiteSettings.objects.last()

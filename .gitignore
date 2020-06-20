@@ -1,3 +1,4 @@
 .dj
 __pycache__
 mysql
+pgdb

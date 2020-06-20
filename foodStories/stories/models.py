@@ -2,21 +2,23 @@ from django.db import models
 from django.utils.translation import gettext as _
 from taggit.managers import TaggableManager
 from django.urls import reverse
+
 # Create your models here.
+
 
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=50)
     description = models.TextField(_("Description"), default='')
     story_image = models.FileField(_("Story file"), upload_to="stories", max_length=100, blank=True, null=True)
     story_count = models.IntegerField(_("Story count"), default=0)
-    # tags = TaggableManager()
+    slug = models.SlugField(unique=True, max_length=100, blank=True, null=True)
+    tags = TaggableManager()
     
-    author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE, null=True, related_name='stories')
-    category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True)
-
+    category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name='stories')
     updated_at = models.DateField(_("Updated date"), auto_now=True)
     created_at = models.DateField(_("Created date"), auto_now_add=True, null = True)
-
+     # author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE, null=True)
+   
 
     class Meta:
         verbose_name = 'Story'
@@ -37,12 +39,10 @@ class Recipe(models.Model):
     prepare_time = models.CharField(_("Prepare time"), max_length=50)
     recipe_image = models.ImageField(_("Recipe Image"), upload_to='recipes/', blank=True, null=True)
     recipe_count = models.IntegerField(_("Recipe count"), default=0)
-
-    category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True)
-    authors = models.ManyToManyField("stories.Author", verbose_name=_("Authors"), related_name='recipes')
-    
+    category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name='recipes')                                                                       
     updated_at = models.DateField(_("Updated date"), auto_now=True)
     created_at = models.DateField(_("Created date"), auto_now_add=True)
+    # authors = models.ManyToManyField("stories.Author", verbose_name=_("Authors"), related_name='recipes')
 
     class Meta:
         verbose_name = 'Recipe'
@@ -54,21 +54,7 @@ class Recipe(models.Model):
     def get_absolute_url(self):
         return reverse('recipe_detail', kwargs={'pk': self.pk})
     
-class Author(models.Model):
-    first_name = models.CharField(_("Name"), max_length=50)
-    last_name = models.CharField(_("Surname"), max_length=50)
-    username = models.CharField(_("Username"), max_length=50 , blank=True)
-    email = models.EmailField(_("Email"), max_length=254, null=True)
-    bio = models.TextField(_("Biography"), blank=True, null=True)
-    password = models.CharField(_("Password"), max_length=50, null=True)
-    image = models.ImageField(_("Image"), upload_to='authors/', blank=True, null=True)
-    
-    class Meta:
-        verbose_name = 'Author'
-        verbose_name_plural = 'Authors'
 
-    def __str__(self):
-        return self.first_name
     
 class Category(models.Model):
     title = models.CharField(_("Title"), max_length=50, default="")
@@ -87,8 +73,8 @@ class Category(models.Model):
 class Tag(models.Model):
     title = models.CharField(_("Title"), max_length=50, blank=True, null=True)
 
-    stories = models.ManyToManyField("stories.Story", verbose_name=_("Story"), related_name='tags')
-    recipes = models.ManyToManyField("stories.Recipe", verbose_name=_("Recipe"), related_name='tags')
+    stories = models.ManyToManyField("stories.Story", verbose_name=_("Story"), related_name='stories')
+    recipes = models.ManyToManyField("stories.Recipe", verbose_name=_("Recipe"), related_name='recipes')
     
     class Meta:
         verbose_name = 'Tag'
@@ -104,10 +90,10 @@ class Comment(models.Model):
     commented_at = models.DateField(_("Commented at"), auto_now_add=True)
     
     comment_reply = models.ForeignKey("self", verbose_name=_("Comment"), on_delete=models.CASCADE, blank=True, null = True)
-    author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE, blank=True, null=True)
-    recipe = models.ForeignKey("stories.Recipe", verbose_name=_("Recipe"), on_delete=models.CASCADE)
+    recipe = models.ForeignKey("stories.Recipe", verbose_name=_("Recipe"), on_delete=models.CASCADE, blank=True, null=True)
     story = models.ForeignKey("stories.Story", verbose_name=_("Story"), on_delete=models.CASCADE, blank=True, null=True)
-    
+     # author = models.ForeignKey("stories.Author", verbose_name=_("Author"), on_delete=models.CASCADE, blank=True, null=True)
+   
     class Meta:
         verbose_name = 'Comment'
         verbose_name_plural = 'Comments'
