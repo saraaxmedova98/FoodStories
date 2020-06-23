@@ -9,7 +9,7 @@
                         <div class="row d-flex justify-content-center mt-4 mb-4">
                             <div class="col-md-8">
                              {% subscribe_form as subscribe %}
-                                <form method='POST' action="{% url 'subscribe' %}" class="subscribe-form">
+                                <form method='POST' action="{% url 'stories:subscribe' %}" class="subscribe-form">
                                 {% csrf_token %}
                                     <div class="form-group d-flex">
                                    

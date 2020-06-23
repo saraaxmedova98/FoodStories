@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from django.utils import timezone
 from .managers import CustomUserManager
 from django.utils.translation import gettext as _
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
 
 # Create your models here.
 

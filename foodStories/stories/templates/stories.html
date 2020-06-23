@@ -11,7 +11,7 @@
             <div class="col-md-9 ftco-animate pb-5 text-center">
                 <h1 class="mb-3 bread">Stories</h1>
                 
-                <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'home' %}">Home <i
+                <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'stories:home' %}">Home <i
                         class="ion-ios-arrow-forward"></i></a></span> <span>Stories <i
                         class="ion-ios-arrow-forward"></i></span>
                 </p>
@@ -29,13 +29,13 @@
                     {% for story in stories %}
                     <div class="col-md-4 ftco-animate">
                         <div class="blog-entry">
-                            <a href="{% url 'story_detail' story.pk %}" class="img-2"><img src="{% static 'images/blog-1.jpg' %}" class="img-fluid"
+                            <a href="{% url 'stories:story_detail' story.pk %}" class="img-2"><img src="{% static 'images/blog-1.jpg' %}" class="img-fluid"
                                                                      alt="Colorlib Template"></a>
                             <div class="text pt-3">
                                 <p class="meta d-flex"><span class="pr-3">{{story.category}}</span><span class="ml-auto pl-3">{{story.updated_at}}</span>
                                 </p>
-                                <h3><a href="{% url 'story_detail' story.pk %}">{{story.title}}</a></h3>
-                                <p class="mb-0"><a href="{% url 'story_detail' story.pk %}" class="btn btn-black py-2">Read More <span
+                                <h3><a href="{% url 'stories:story_detail' story.pk %}">{{story.title}}</a></h3>
+                                <p class="mb-0"><a href="{% url 'stories:story_detail' story.pk %}" class="btn btn-black py-2">Read More <span
                                         class="icon-arrow_forward ml-4"></span></a></p>
                             </div>
                         </div>
@@ -84,7 +84,7 @@
                         <ul class="category-image">
                             {% for category in categories %}
                             <li>
-                                <a href="{% url 'story_category' category.title|lower %}" class="img d-flex align-items-center justify-content-center text-center"
+                                <a href="{% url 'stories:story_category' category.title|lower %}" class="img d-flex align-items-center justify-content-center text-center"
                                    style="background-image: url('{{category.image.url}}');">
                                     <div class="text">
                                         <h3>{{category.title}}</h3>

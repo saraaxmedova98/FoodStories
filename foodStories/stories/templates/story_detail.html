@@ -5,7 +5,7 @@
 {% block middle_container %}
 {% load static %}
 
-<section class="hero-wrap hero-wrap-2" style="background-image: url({% static 'images/bg_4.jpg' %});">
+<section class="hero-wrap hero-wrap-2" style="background-image: url({{story.cover_image.url }});">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text align-items-end justify-content-center">
@@ -225,7 +225,7 @@
                     <ul class="categories">
                         <h3 class="heading mb-4">Categories</h3>
                         {% for category in categories %}
-                        <li><a href="{% url 'story_category' category.title|lower %}">{{category.title}} <span>{{category.stories.count}}</span></a></li>
+                        <li><a href="{% url 'stories:story_category' category.title|lower %}">{{category.title}} <span>{{category.stories.count}}</span></a></li>
                         {% endfor %}
                         
                     </ul>
@@ -235,7 +235,7 @@
                     <h3 class="heading mb-4">Recent Stories</h3>
                    {% for story in stories %}
                     <div class="block-21 mb-4 d-flex">
-                        <a class="blog-img mr-4" style="background-image: url('{{story.story_image.url}}');"></a>
+                        <a class="blog-img mr-4" style="background-image: url('{{story.story_image}}');"></a>
                         <div class="text">
                             <h3><a href="#">{{story.title}}</a></h3>
                             <div class="meta">

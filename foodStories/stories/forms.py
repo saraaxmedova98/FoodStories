@@ -59,8 +59,7 @@ class RecipeForm(forms.ModelForm):
             'category': forms.Select(attrs={
                 'class': 'form-control',
             })
-            # 'story_image': forms.ClearableFileInput()
-
+            
         }
 
     # def clean_title(self):

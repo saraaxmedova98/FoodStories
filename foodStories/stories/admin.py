@@ -21,27 +21,6 @@ class ContactAdmin(admin.ModelAdmin):
                 'fields' : ['subject',]
         }),
     )
-# def change_user( modeladmin, request, queryset):
-#         queryset.update(username = 'user')
-# change_user.short_description = 'change username'
-
-# @admin.register(Author)
-# class AuthorAdmin(admin.ModelAdmin):
-#     list_display=['first_name', 'last_name', 'username', 'email']
-#     ordering=['first_name']
-#     search_fields = ['first_name', 'username']
-#     list_filter = ['username']
-#     actions = ['change_user']
-#     fieldsets = (
-#         ('Required Fields', {
-#             "fields": ('first_name','last_name', 'email', 'password'),
-#         }),
-#         ('Optional Fields', {
-#             "fields": ('username','bio','image',),
-#             'classes': ('collapse',),
-#         }),
-    
-#     )
 
     def change_user( self, request, queryset):
         queryset.update(username = 'user')
@@ -58,12 +37,12 @@ class StoryAdmin(admin.ModelAdmin):
             "fields": ('title',),
         }),
         ('Optional Fields', {
-            "fields": ('description','story_image'),
+            "fields": ('description','story_image', 'cover_image'),
             'classes': ('collapse',),
 
         }),
         ('Relational Fields', {
-            "fields": ('category',),
+            "fields": ('category','user'),
             'classes': ('collapse',),
         }),
 
@@ -81,12 +60,12 @@ class RecipeAdmin(admin.ModelAdmin):
             "fields": ('title','ingredients','prepare_time',),
         }),
         ('Optional Fields', {
-            "fields": ('description','directions','recipe_image',),
+            "fields": ('description','directions','recipe_image','cover_image',),
             'classes': ('collapse',),
 
         }),
         ('Relational Fields', {
-            "fields": ('category',),
+            "fields": ('category','users'),
             'classes': ('collapse',),
         }),
 

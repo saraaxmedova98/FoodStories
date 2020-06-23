@@ -12783,7 +12783,9 @@ textarea.form-control {
 .resize{
     resize: none;
 }
-
+.fa-user-circle{
+    font-size: 20px
+}
 @import url('https://kodhus.com/kodhus-ui/kodhus-0.1.0.min.css');
 body {
   background: #eee;
