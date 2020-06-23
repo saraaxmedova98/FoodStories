@@ -39,9 +39,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'taggit',
+    'social_django',
     'stories',
     'account',
     
+    
+]
+
+AUTHENTICATION_BACKENDS = [
+    'social_core.backends.linkedin.LinkedinOAuth2',
+    'social_core.backends.instagram.InstagramOAuth2',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +61,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'foodStories.urls'
@@ -67,10 +77,13 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',  # <-- Here
+                'social_django.context_processors.login_redirect', 
             ],
         },
     },
 ]
+
 
 AUTH_USER_MODEL = 'account.CustomUser'
 
@@ -128,6 +141,8 @@ LOGIN_URL = reverse_lazy('account:login')
 
 LOGIN_REDIRECT_URL = reverse_lazy('stories:home')
 
+LOGOUT_URL = reverse_lazy('logout')
+
 LOGOUT_REDIRECT_URL = reverse_lazy('account:login')
 
 
@@ -142,6 +157,18 @@ STATICFILES_DIRS= [
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+SOCIAL_AUTH_FACEBOOK_KEY = '2528440937255577'        # App ID
+SOCIAL_AUTH_FACEBOOK_SECRET = '1f7100f6394703d37a094f14f7995e59' 
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email', 'user_link'] # add this
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {       # add this
+  'fields': 'id, name, email, picture.type(large), link'
+}
+SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [                 # add this
+    ('name', 'name'),
+    ('email', 'email'),
+    ('picture', 'picture'),
+    ('link', 'profile_url'),
+]
 
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
