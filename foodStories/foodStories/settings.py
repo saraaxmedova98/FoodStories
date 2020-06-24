@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'taggit',
     'social_django',
     'stories',
@@ -50,6 +51,7 @@ AUTHENTICATION_BACKENDS = [
     'social_core.backends.linkedin.LinkedinOAuth2',
     'social_core.backends.instagram.InstagramOAuth2',
     'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 ]
 
@@ -136,7 +138,9 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-    
+
+SITE_ID = 1
+
 LOGIN_URL = reverse_lazy('account:login')
 
 LOGIN_REDIRECT_URL = reverse_lazy('stories:home')
@@ -170,11 +174,14 @@ SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [                 # add this
     ('link', 'profile_url'),
 ]
 
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '958585572793-25menfvtvp8tfsgqi5eukfs31h5b8rph.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'gcuPO6lUYraD1RcCsvptkGvH'
+
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST = 'smtp.yandex.com'
 EMAIL_PORT: 587
-EMAIL_HOST_USER: ''
-EMAIL_HOST_PASSWORD: ''
+EMAIL_HOST_USER: 'ahmadovasara@yandex.ru'
+EMAIL_HOST_PASSWORD: '!!!!sara'
 EMAIL_USE_TLS: True
 EMAIL_USE_SSL: False
-LIST_OF_EMAIL_RECIPIENTS = ['sara.axmedova98@gmail.com']
+# LIST_OF_EMAIL_RECIPIENTS = ['sara.axmedova98@gmail.com']

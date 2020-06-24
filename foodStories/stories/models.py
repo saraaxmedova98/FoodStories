@@ -10,8 +10,8 @@ User = get_user_model()
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=50)
     description = models.TextField(_("Description"), default='')
-    story_image = models.FileField(_("Story file"), upload_to="stories", max_length=100, blank=True, null=True)
-    cover_image = models.FileField(_("Cover image"), upload_to="stories",  max_length=None, default="bg_4.jpg")
+    story_image = models.ImageField(_("Story image"), upload_to="stories", max_length=100, blank=True, null=True)
+    cover_image = models.ImageField(_("Cover image"), upload_to="stories",  max_length=None, default="stories/bg_4.jpg")
     story_count = models.IntegerField(_("Story count"), default=0)
     slug = models.SlugField(unique=True, max_length=100, blank=True, null=True)
     tags = TaggableManager()
@@ -37,7 +37,6 @@ class Recipe(models.Model):
     title = models.CharField(_("Title"), max_length=50)
     description = models.TextField(_("Description"), default='')
     ingredients = models.TextField(_("Ingredients"))
-    directions = models.TextField(_("Directions"), default="")
     prepare_time = models.CharField(_("Prepare time"), max_length=50)
     recipe_image = models.ImageField(_("Recipe Image"), upload_to='recipes/', blank=True, null=True)
     cover_image = models.ImageField(_("Cover image"), upload_to='stories', default='bg_4.jpg')
@@ -45,7 +44,7 @@ class Recipe(models.Model):
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name='recipes')                                                                       
     updated_at = models.DateField(_("Updated date"), auto_now=True)
     created_at = models.DateField(_("Created date"), auto_now_add=True)
-    users = models.ManyToManyField("account.CustomUser", verbose_name=_("User"), related_name='recipes', null=True)
+    user = models.ForeignKey("account.CustomUser", verbose_name=_("User"), on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name = 'Recipe'

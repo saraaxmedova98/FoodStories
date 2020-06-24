@@ -34,7 +34,7 @@ class RecipeForm(forms.ModelForm):
     
     class Meta:
         model = Recipe
-        fields = ("title",'description','ingredients','directions', 'category','prepare_time', 'recipe_image')
+        fields = ("title",'description','ingredients', 'category','prepare_time', 'recipe_image')
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -47,10 +47,6 @@ class RecipeForm(forms.ModelForm):
             'ingredients': forms.Textarea(attrs={
                 'class': 'form-control resize',
                 'placeholder' : 'Ingredients'
-            }),
-            'directions': forms.Textarea(attrs={
-                'class': 'form-control resize',
-                'placeholder' : 'Directions'
             }),
             'prepare_time': forms.TextInput(attrs={
                 'class': 'form-control',

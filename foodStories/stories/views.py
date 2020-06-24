@@ -26,7 +26,7 @@ class HomeView(TemplateView):
         print(self.request.user)
         context["recipes"] = Recipe.objects.all()[:2]
         context['stories'] = Story.objects.all()[:4]
-        context['user_stories'] = Story.objects.filter(user = self.request.user)
+        context['user_stories'] = Story.objects.filter(user = self.request.user)[:3]
         context['categories'] = Category.objects.all()[:3]
         context['user_profile'] = User.objects.get(email = self.request.user)
         return context
@@ -77,6 +77,7 @@ class StoryList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()[:3]
+        context['user'] = User.objects.get(email = self.request.user)
         return context
 
 
@@ -102,7 +103,7 @@ class StoryDetail(FormMixin,DetailView):
     # common_tags = Post.tags.most_common()[:4]
 
     def get_success_url(self):
-        return reverse_lazy('story_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('stories:story_detail', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -223,20 +224,6 @@ class RecipeDeleteView(DeleteView):
 
 
 
-# class LoginView(View):
-#     template_name = 'accounts/login.html'
-#     form_class = LoginForm
-#     def get(self, request, *args, **kwargs):
-#         form = self.form_class()
-#         return render(request, self.template_name , {'form': form})
-
-#     def post(self, request, *args, **kwargs):
-#         form = self.form_class(request.POST)
-#         if form.is_valid():
-#             pass
-#         return render(request, self.template_name, {'form': form})
-
-
 def single(request):
     return render(request, 'single.html')
 
@@ -256,26 +243,13 @@ def email_subscribers(request):
     return render(request, 'email_subscribers.html')
 
 
-# class UserDetailView(ListView):
-#     model = User
-#     template_name = "user_profile.html"
-
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         user = User.objects.filter(email = self.request.user)
-#         print(user)
-#         context["stories"] = Story.objects.filter(user = user)
-        
-#         return context
-
-
 
 
 class ContactCreateView(CreateView):
     model = Contact
     template_name = "contact.html"
     form_class = ContactForm
-    success_url = reverse_lazy('home')
+    success_url = reverse_lazy('stories:home')
 
     def form_valid(self, form):
         form.save()

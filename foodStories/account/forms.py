@@ -1,4 +1,5 @@
-from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm, UsernameField
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm,\
+    PasswordChangeForm, PasswordResetForm, SetPasswordForm
 from django import forms
 from account.models import CustomUser
 from django.contrib.auth import get_user_model
@@ -75,7 +76,7 @@ class UserEditForm(forms.ModelForm):
                 'placeholder' : 'Email'
             }),
             'bio': forms.Textarea(attrs={
-                'class': 'form-control',
+                'class': 'form-control resize',
                 'placeholder' : 'Biography'
             }),
             
@@ -91,5 +92,39 @@ class LoginForm(AuthenticationForm):
     password = forms.CharField(widget= forms.PasswordInput(attrs={
         'class': 'form-control',
         'placeholder' : 'Password'
+    }), required=True)
+
+class UserPasswordChangeForm(PasswordChangeForm):
+    old_password = forms.CharField(widget = forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder' : 'Old Password'
+    }), required=True)
+    new_password = forms.CharField(widget = forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder' : 'New Password'
+    }), required=True)
+    confirm_new_password = forms.CharField(widget = forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder' : 'Cinfirm Password'
+    }), required=True)
+
+    class Meta:
+        fields = ('old_password', 'new_password', 'confirm_new_password', )
+
+
+class ResetPasswordForm(PasswordResetForm):
+    email = forms.EmailField(widget = forms.EmailInput(attrs={
+        'class': 'form-control',
+        'placeholder' : 'Email'
+    }), required=True)
+
+class CustomResetPasswordForm(SetPasswordForm):
+    new_password1 = forms.CharField(widget = forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder' : 'Password'
+    }), required=True)
+    new_password2 = forms.CharField(widget = forms.PasswordInput(attrs={
+        'class': 'form-control',
+        'placeholder' : 'Password 2'
     }), required=True)
 

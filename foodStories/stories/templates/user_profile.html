@@ -9,17 +9,26 @@
                     <div class="user-profile-side-bar sidebar-wrap">
                         <div class="sidebar-box p-4 about text-center ftco-animate">
                             <h2 class="heading mb-4">About Me</h2>
+                            {% if request.user.profile_image %}
                             <img src="{{user_profile.profile_image.url}}" class="img-fluid" alt="Colorlib Template">
+                            {% else %}
+                            <img src="{% static 'images/author.jpg' %}" class="img-fluid" alt="Colorlib Template">
+                            
+                            {% endif %}
                             <div class="text pt-4">
                             
-                                <p>Hi! My name is <strong>{{user_profile.first_name}} {{user_profile.last_name}}. </strong>
-                                {{user_profile.bio}}
+                                <p>Hi! My name is <strong>{{request.user.first_name}} {{request.user.last_name}}. </strong>
+                                {% if request.user.bio %}
+                                <span> {{request.user.bio}}</span>
+                                {% else %}
+                                <span></span>
+                                {% endif %}
                                 </p>
                             </div>
                         </div>
                         <div class="sidebar-box ftco-animate user-profile">
 
-                            <a href="{% url 'account:update_user_info' user_profile.pk %}" class="btn btn-hover-color py-2">Edit Profile</a>
+                            <a href="{% url 'account:update_user_info' request.user.pk %}" class="btn btn-hover-color py-2">Edit Profile</a>
 
                         </div>
                         <div class="sidebar-box ftco-animate user-profile">
@@ -54,8 +63,12 @@
                                         <a href = "{% url 'stories:update_story' story.pk %}" class="edit-event"><i class="fas fa-pencil-alt"></i></a>
                                         <a href = "{% url 'stories:delete_story' story.pk %}" class="delete-event"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                     </div>
-
+                                    {% if story.story_image %}
                                     <img src="{{story.story_image.url}}" class="img-fluid" alt="Colorlib Template">
+                                    {% else %}
+                                     <img src="{% static 'images/bg_1.jpg' %}" class="img-fluid" alt="Colorlib Template">
+                                    
+                                    {% endif %}
                                 </a>
                                 <div class="text pt-3">
                                     <p class="meta d-flex"><span class="pr-3">{{story.category}}</span><span class="ml-auto pl-3">{{story.updated_at}}</span>
@@ -84,8 +97,12 @@
                                         <a href = "{% url 'stories:update_recipe' recipe.pk %}" class="edit-event"><i class="fas fa-pencil-alt"></i></a>
                                         <a href = "{% url 'stories:delete_recipe' recipe.pk %}" class="delete-event"><i class="fa fa-trash" aria-hidden="true"></i></a>
                                     </div>
-
+                                        {% if recipe.recipe_image %}
                                     <img src="{{recipe.recipe_image.url}}" class="img-fluid" alt="Colorlib Template">
+                                    
+                                    {% else %}
+                                    <img src="{% static 'images/bg_1.jpg' %}" class="img-fluid" alt="Colorlib Template">
+                                    {% endif %}
                                 </a>
                                 <div class="text pt-3">
                                     <p class="meta d-flex"><span class="pr-3">{{recipe.category}}</span><span class="ml-auto pl-3">{{recipe.updated_at}}</span>

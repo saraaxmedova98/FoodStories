@@ -61,7 +61,8 @@
                         <div class="owl-carousel owl-theme">
                            {% for story in stories %}
                          <div class="blog-entry">
-                        <div class="img img-big d-flex align-items-end" style="background-image: url('{{story.story_image}}');">
+                         {% if story.story_image %}
+                         <div class="img img-big d-flex align-items-end" style="background-image: url('{{story.story_image}}');">
                             <div class="overlay"></div>
                             <div class="text">
                                 <span class="subheading">{{story.category}}</span>
@@ -70,6 +71,20 @@
                                     class="icon-arrow_forward ml-4"></span></a></p>
                             </div>
                         </div>
+                                  {% else %}
+
+                                    <div class="img img-big d-flex align-items-end" style="background-image: url({% static 'images/bg_1.jpg' %});">
+                                        <div class="overlay"></div>
+                                        <div class="text">
+                                            <span class="subheading">{{story.category}}</span>
+                                            <h3><a href="{% url 'stories:stories' %}">{{story.title}}</a></h3>
+                                            <p class="mb-0"><a href="{% url 'stories:stories' %}" class="btn-custom">Read More <span
+                                                class="icon-arrow_forward ml-4"></span></a></p>
+                                        </div>
+                                    </div>
+                                    
+                                    {% endif %}
+                      
                          </div>
                            {% endfor %}
                         </div>
@@ -80,8 +95,13 @@
                         {% for story in stories %}
                         <div class="col-md-6 ftco-animate">
                             <div class="blog-entry">
-                                <a href="{% url 'stories:story_detail' story.pk %}" class="img d-flex align-items-end" style="background-image: url({% static 'images/image_1.jpg' %});">
-                                    <div class="overlay"></div>
+                            {% if story.story_image %}
+                                <a href="{% url 'stories:story_detail' story.pk %}" class="img d-flex align-items-end" style="background-image: url({{story.story_image.url}});">
+                               
+                            {% else %}
+                                <a href="{% url 'stories:story_detail' story.pk %}" class="img d-flex align-items-end" style="background-image: url({% static 'images/bg_1.jpg' %});">
+                            {% endif %}
+                              <div class="overlay"></div>
                                 </a>
                                 <div class="text pt-3">
                                     <p class="meta d-flex"><span class="pr-3">{{story.category}}</span><span class="ml-auto pl-3">{{story.updated_at}}</span>
@@ -113,12 +133,19 @@
                        {% for story in user_stories %}
                         <div class="col-md-4 ftco-animate">
                             <div class="blog-entry">
-                                <a href="" class="img-2"><img src="{{story.story_image.url}}" class="img-fluid" alt="Colorlib Template"></a>
-                                <div class="text pt-3">
+                                {% if story.story_image %}
+                                <a href="{% url 'stories:story_detail' story.pk %}" class="img-2"><img src="{{story.story_image.url}}" class="img-fluid" alt="Colorlib Template"></a>
+                               
+                                   {% else %}
+                                     <a href="{% url 'stories:story_detail' story.pk %}" class="img-2"><img src="{% static 'images/bg_1.jpg' %}" class="img-fluid" alt="Colorlib Template"></a>
+                               
+                                    {% endif %}
+                               
+                               <div class="text pt-3">
                                     <p class="meta d-flex"><span class="pr-3">{{story.category}}</span><span class="ml-auto pl-3">{{story.updated_at}}</span>
                                     </p>
-                                    <h3><a href="#">{{story.title}}</a></h3>
-                                    <p class="mb-0"><a href="" class="btn btn-black py-2">Read More <span
+                                    <h3><a href="{% url 'stories:story_detail' story.pk %}">{{story.title}}</a></h3>
+                                    <p class="mb-0"><a href="{% url 'stories:story_detail' story.pk %}" class="btn btn-black py-2">Read More <span
                                         class="icon-arrow_forward ml-4"></span></a></p>
                                 </div>
                             </div>
@@ -131,9 +158,20 @@
                     <div class="sidebar-wrap">
                         <div class="sidebar-box p-4 about text-center ftco-animate">
                             <h2 class="heading mb-4">About Me</h2>
-                            <img src="{{user_profile.profile_image.url}}" class="img-fluid" alt="Colorlib Template">
+                            {% if user_profile.profile_image %}
+                                    <img src="{{user_profile.profile_image.url}}" class="img-fluid" alt="Colorlib Template">
+                                    {% else %}
+                                     <img src="{% static 'images/author.jpg' %}" class="img-fluid" alt="Colorlib Template">
+                                    
+                                    {% endif %}
                             <div class="text pt-4">
-                                <p>Hi! My name is <strong>{{user_profile.first_name}} {{user_profile.last_name}}. </strong>{{user_profile.bio}}</p>
+                                <p>Hi! My name is <strong>{{user_profile.first_name}} {{user_profile.last_name}}. 
+                               {% if request.user.bio %}
+                                <span> {{request.user.bio}}</span>
+                                {% else %}
+                                <span></span>
+                                {% endif %}
+                                </p>
                             </div>
                         </div>
                         <div class="sidebar-box p-4 ftco-animate">
@@ -162,7 +200,8 @@
                        {% for recipe in recipes %}
                         <div class="col-md-6 col-lg-6 ftco-animate">
                             <div class="blog-entry">
-                                <div class="img img-big img-big-2 d-flex align-items-end" style="background-image: url({{recipe.recipe_image}});">
+                               {% if recipe.recipe_image %}
+                                <div class="img img-big img-big-2 d-flex align-items-end" style="background-image: url({{recipe.recipe_image.url}});">
                                     <div class="overlay"></div>
                                     <div class="text">
                                         <span class="subheading">{{recipe.category}}</span>
@@ -171,6 +210,17 @@
                                             class="icon-arrow_forward ml-4"></span></a></p>
                                     </div>
                                 </div>
+                                {% else %}
+                                 <div class="img img-big img-big-2 d-flex align-items-end" style="background-image: url({% static 'images/bg_1.jpg' %});">
+                                    <div class="overlay"></div>
+                                    <div class="text">
+                                        <span class="subheading">{{recipe.category}}</span>
+                                        <h3><a href="{% url 'stories:recipe_detail' recipe.pk %}">{{recipe.title}}</a></h3>
+                                        <p class="mb-0"><a href="{% url 'stories:recipe_detail' recipe.pk %}" class="btn-custom">Read More <span
+                                            class="icon-arrow_forward ml-4"></span></a></p>
+                                    </div>
+                                </div>
+                               {% endif %}
                             </div>
                         </div>
                        {% endfor %}

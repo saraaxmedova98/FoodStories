@@ -51,7 +51,7 @@ class StoryAdmin(admin.ModelAdmin):
 
 @admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = ['title', 'description', 'ingredients', 'directions', 'prepare_time','recipe_image', 'category']
+    list_display = ['title', 'description', 'ingredients', 'prepare_time','recipe_image', 'category']
     ordering = ['title']
     search_fields = ['title', 'description']
     list_filter = ['created_at','category']
@@ -60,12 +60,12 @@ class RecipeAdmin(admin.ModelAdmin):
             "fields": ('title','ingredients','prepare_time',),
         }),
         ('Optional Fields', {
-            "fields": ('description','directions','recipe_image','cover_image',),
+            "fields": ('description','recipe_image','cover_image',),
             'classes': ('collapse',),
 
         }),
         ('Relational Fields', {
-            "fields": ('category','users'),
+            "fields": ('category','user'),
             'classes': ('collapse',),
         }),
 

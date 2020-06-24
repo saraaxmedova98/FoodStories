@@ -48,9 +48,9 @@
                     <li class="nav-item"><a href="{% url 'stories:stories' %}" class="nav-link">Stories</a></li>
                     <li class="nav-item"><a href="{% url 'stories:recipes' %}" class="nav-link">Recipes</a></li>
                     <li class="nav-item"><a href="{% url 'stories:contact' %}" class="nav-link">Contact</a></li>
-                     {% if user.is_authenticated %}
+                     {% if request.user.is_authenticated %}
                     <li><a href="{% url 'account:logout' %}" class="btn btn-black px-3 px-md-4 py-3">Logout</a></li>
-                    <li class="nav-item"><a href="{% url 'account:user_profile'%}" class="nav-link"><i class="fas fa-user-circle"></i></a></li>
+                    <li class="nav-item"><a href="{% url 'account:user_profile' user.pk %}" class="nav-link"><i class="fas fa-user-circle"></i></a></li>
                     {% else %}
                     <li><a href="{% url 'account:login' %}" class="btn btn-black px-3 px-md-4 py-3">Sign in</a></li>
                     {% endif %}

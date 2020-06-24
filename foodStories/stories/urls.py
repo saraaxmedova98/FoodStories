@@ -1,5 +1,5 @@
 from django.urls import path
-from stories.views import reset_password,change_password,forget_password,email_subscribers,\
+from stories.views import reset_password,email_subscribers,\
     ContactCreateView, SubscribeView, RecipeList,RecipeDetail, StoryList,StoryDetail,\
          StoryCreateView, StoryUpdateView, AboutView,HomeView, StoryCategoryList, \
              RecipeCategoriesList, RecipeCreateView, RecipeUpdateView, \
@@ -23,12 +23,9 @@ urlpatterns = [
     path('recipe/update/<int:pk>', RecipeUpdateView.as_view(), name='update_recipe'),
     path('recipe/delete/<int:pk>', RecipeDeleteView.as_view(), name='delete_recipe'),
     path('contact/', ContactCreateView.as_view() , name='contact' ),
-    # path('login/', LoginView.as_view(), name='login' ),
-    # path('register/', register, name='register' ),
-    # path('single/', single, name='single' ),
     path("reset_password/", reset_password, name="reset_password"),
-    path("change_password/", change_password, name="change_password"),
-    path("forget_password/", forget_password, name="forget_password"),
+    # path("change_password/", change_password, name="change_password"),
+    # path("forget_password/", forget_password, name="forget_password"),
     path("email_subscribers/", email_subscribers, name="email_subscribers"),
     path("subscribe/", SubscribeView.as_view(), name="subscribe"),
     
