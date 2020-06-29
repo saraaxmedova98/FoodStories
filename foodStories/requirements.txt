@@ -8,7 +8,7 @@ chardet==3.0.4
 cryptography==2.9.2
 dateparser==0.7.6
 defusedxml==0.7.0rc1
-Django==3.0.6
+Django==3.0.7
 django-3-jet @ https://github.com/Barukimang/django-jet/archive/dev.zip
 django-allauth==0.42.0
 django-celery-beat==2.0.0
