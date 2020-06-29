@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
-from stories.forms import ContactForm, SubscribeForm, StoryForm, RecipeForm, CommentForm
+from stories.forms import ContactForm, SubscribeForm, StoryForm, RecipeForm, CommentForm, SumForm
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView
-from stories.models import Recipe, Story, Category, Tag, Contact, Comment
+from stories.models import Recipe, Story, Category, Contact, Comment, SumNumbers, Subscribe
 from account.models import CustomUser
 from django.db.models import Count
 from django.utils import timezone
@@ -12,7 +12,13 @@ from django.core.mail import send_mail
 from django.contrib import messages
 from django.urls import reverse_lazy
 from taggit.models import Tag 
+from django.template.defaultfilters import slugify
 from django.contrib.auth import get_user_model
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.parsers import JSONParser
+from stories.api.serializers import StoryModelSerializer
+from stories.tasks import add , subscribers_email
 # Create your views here.
 
 User = get_user_model()
@@ -100,8 +106,6 @@ class StoryDetail(FormMixin,DetailView):
     context_object_name = 'story'
     template_name='story_detail.html'
     form_class = CommentForm
-    # common_tags = Post.tags.most_common()[:4]
-
     def get_success_url(self):
         return reverse_lazy('stories:story_detail', kwargs={'pk': self.object.pk})
 
@@ -109,6 +113,8 @@ class StoryDetail(FormMixin,DetailView):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         context['stories'] = Story.objects.all()[:3]
+        context['tags']= Story.tags.most_common()
+        
         return context
 
     def get_object(self):
@@ -126,7 +132,6 @@ class StoryDetail(FormMixin,DetailView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
-
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
@@ -224,27 +229,6 @@ class RecipeDeleteView(DeleteView):
 
 
 
-def single(request):
-    return render(request, 'single.html')
-
-def reset_password(request):
-    return render(request, 'accounts/reset_password.html')
-
-def change_password(request):
-    return render(request, 'accounts/change_password.html')
-    
-def forget_password(request):
-    return render(request, 'accounts/forget_password.html')
-
-# def user_profile(request):
-#     return render(request, 'user_profile.html')
-
-def email_subscribers(request):
-    return render(request, 'email_subscribers.html')
-
-
-
-
 class ContactCreateView(CreateView):
     model = Contact
     template_name = "contact.html"
@@ -260,18 +244,89 @@ class ContactCreateView(CreateView):
         return super().form_invalid(form)
 
 
-
-class SubscribeView(View):
+class SubscribeView(FormView):
+    model = Subscribe
+    template_name = "subscribe.html"
+    success_url = reverse_lazy('stories:home')
     form_class = SubscribeForm
     
- 
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        if form.is_valid():
-            form.save()
+    def form_valid(self, form):
+        # form.instance.user = self.request.user
+        form.save()
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Something went wrong!!')
+        return super().form_invalid(form)
 
 
 
-       
+class EmailSubscribeView(View):
+    def get(self, request, *args, **kwargs):
+        subscribers_email.delay()
+        return HttpResponse('<h1>Email send successfully to subscribers</h1>')
 
-  
+
+
+@csrf_exempt
+def story_list(request):
+    """
+    List all code snippets, or create a new snippet.
+    """
+    if request.method == 'GET':
+        story = Story.objects.all()
+        serializer = StoryModelSerializer(story, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+    elif request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = StoryModelSerializer(data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data, status=201)
+        return JsonResponse(serializer.errors, status=400)     
+
+
+@csrf_exempt
+def story_detail(request, pk):
+    """
+    Retrieve, update or delete a code story.
+    """
+    try:
+        story = Story.objects.get(pk=pk)
+    except Story.DoesNotExist:
+        return HttpResponse(status=404)
+
+    if request.method == 'GET':
+        serializer = StoryModelSerializer(story)
+        return JsonResponse(serializer.data)
+
+    elif request.method == 'PUT':
+        data = JSONParser().parse(request)
+        serializer = StoryModelSerializer(story, data=data)
+        if serializer.is_valid():
+            serializer.save()
+            return JsonResponse(serializer.data)
+        return JsonResponse(serializer.errors, status=400)
+
+    elif request.method == 'DELETE':
+        story.delete()
+        return HttpResponse(status=204)
+
+class SumCreateView(FormView):
+    model = SumNumbers
+    template_name = "sum.html"
+    success_url = reverse_lazy('stories:sum')
+    # fields = ['title', 'description', 'story_image', 'category']
+    form_class = SumForm
+    def form_valid(self, form):
+        x = form.cleaned_data['x']
+        y = form.cleaned_data['y']
+        result = add.delay(x,y)
+        print(x,y, result)
+        SumNumbers.objects.create(sum = result.get())
+        return super().form_valid(form)
+
+    def form_invalid(self, form):
+        messages.warning(self.request, 'Something went wrong!!')
+        return super().form_invalid(form)

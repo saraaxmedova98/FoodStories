@@ -1,9 +1,9 @@
 from django.urls import path
-from stories.views import reset_password,email_subscribers,\
-    ContactCreateView, SubscribeView, RecipeList,RecipeDetail, StoryList,StoryDetail,\
-         StoryCreateView, StoryUpdateView, AboutView,HomeView, StoryCategoryList, \
-             RecipeCategoriesList, RecipeCreateView, RecipeUpdateView, \
-             RecipeDeleteView, StoryDeleteView
+from stories.views import ContactCreateView, SubscribeView, RecipeList,RecipeDetail, StoryList,StoryDetail,\
+         StoryCreateView, StoryUpdateView, AboutView,HomeView, StoryCategoryList,RecipeCategoriesList, RecipeCreateView, \
+             RecipeUpdateView,RecipeDeleteView, StoryDeleteView,SumCreateView, EmailSubscribeView
+from stories.api.urls import urlpatterns as api_urls
+
 
 app_name = 'stories'
 
@@ -23,13 +23,8 @@ urlpatterns = [
     path('recipe/update/<int:pk>', RecipeUpdateView.as_view(), name='update_recipe'),
     path('recipe/delete/<int:pk>', RecipeDeleteView.as_view(), name='delete_recipe'),
     path('contact/', ContactCreateView.as_view() , name='contact' ),
-    path("reset_password/", reset_password, name="reset_password"),
-    # path("change_password/", change_password, name="change_password"),
-    # path("forget_password/", forget_password, name="forget_password"),
-    path("email_subscribers/", email_subscribers, name="email_subscribers"),
+    path("email_subscribers/", EmailSubscribeView.as_view(), name="email_subscribers"),
     path("subscribe/", SubscribeView.as_view(), name="subscribe"),
+    path("sum/", SumCreateView.as_view(), name="sum"),
     
-    
-
-    
-]
+] + api_urls

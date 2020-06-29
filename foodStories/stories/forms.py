@@ -121,3 +121,7 @@ class CommentForm(forms.ModelForm):
                 'placeholder' : 'Message'}),            
         }
 
+class SumForm(forms.Form):
+    x = forms.IntegerField( required=False)
+    y = forms.IntegerField( required=False)
+    

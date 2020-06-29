@@ -1,5 +1,5 @@
 from django.contrib import admin
-from stories.models import Contact, Recipe, Comment, Story , Tag, Category, Subscribe, SiteSettings
+from stories.models import Contact, Recipe, Comment, Story , Category,Subscribe, SiteSettings, SumNumbers
 
 
 @admin.register(Contact)
@@ -28,16 +28,16 @@ class ContactAdmin(admin.ModelAdmin):
 
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
-    list_display = ['title', 'description', 'story_image', 'category']
-    ordering = ['title']
+    list_display = ['title', 'description', 'story_image', 'category','updated_at','created_at']
+    ordering = ['created_at']
     search_fields = ['title']
     list_filter = ['created_at', 'category']
     fieldsets = (
         ('Required Fields', {
-            "fields": ('title',),
+            "fields": ('title','description','tags'),
         }),
         ('Optional Fields', {
-            "fields": ('description','story_image', 'cover_image'),
+            "fields": ('story_image', 'cover_image',),
             'classes': ('collapse',),
 
         }),
@@ -89,22 +89,22 @@ class CommentAdmin(admin.ModelAdmin):
 
     )
 
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    list_display = ['title']
-    ordering = ['title']
-    search_fields = ['title']
-    list_filter = ['stories', 'recipes']
-    fieldsets = (
-        ('Required Fields', {
-            "fields": ('title',),
-        }),
-        ('Relational Fields', {
-            "fields": ('stories','recipes',),
-            'classes': ('collapse',),
-        }),
+# @admin.register(Tag)
+# class TagAdmin(admin.ModelAdmin):
+#     list_display = ['title']
+#     ordering = ['title']
+#     search_fields = ['title']
+#     list_filter = ['stories', 'recipes']
+#     fieldsets = (
+#         ('Required Fields', {
+#             "fields": ('title',),
+#         }),
+#         ('Relational Fields', {
+#             "fields": ('stories','recipes',),
+#             'classes': ('collapse',),
+#         }),
 
-    )
+#     )
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
@@ -141,7 +141,9 @@ class SiteSettingsAdmin(admin.ModelAdmin):
             return True
     
 
-
+@admin.register(SumNumbers)
+class SUmNumbersAdmin(admin.ModelAdmin):
+    list_display= ['sum']
     
 
     

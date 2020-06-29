@@ -24,7 +24,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 order-lg-last ftco-animate">
-                <h2 class="mb-3">{{storuy.title}}</h2>
+                <h2 class="mb-3">{{story.title}}</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis, eius mollitia suscipit,
                     quisquam doloremque distinctio perferendis et doloribus unde architecto optio laboriosam porro
                     adipisci sapiente officiis nemo accusamus ad praesentium? Esse minima nisi et. Dolore perferendis,
@@ -65,6 +65,9 @@
                     inventore?</p>
                 <div class="tag-widget post-tag-container mb-5 mt-5">
                     <div class="tagcloud">
+                    {% for item in related_items %}
+                     <a href="#" class="tag-cloud-link">{{item}}</a>
+                    {% endfor %}
                         <a href="#" class="tag-cloud-link">Life</a>
                         <a href="#" class="tag-cloud-link">Sport</a>
                         <a href="#" class="tag-cloud-link">Tech</a>
@@ -252,17 +255,9 @@
                 <div class="sidebar-box ftco-animate">
                     <h3 class="heading mb-4">Tag Cloud</h3>
                     <div class="tagcloud">
-                    {% for story in stories %}
-                     <a href="#" class="tag-cloud-link">{{story.tags}}</a>
+                    {% for tag in tags %}
+                     <a href="#" class="tag-cloud-link">{{tag}}</a>
                     {% endfor %}
-                        <a href="#" class="tag-cloud-link">dish</a>
-                        <a href="#" class="tag-cloud-link">menu</a>
-                        <a href="#" class="tag-cloud-link">food</a>
-                        <a href="#" class="tag-cloud-link">sweet</a>
-                        <a href="#" class="tag-cloud-link">tasty</a>
-                        <a href="#" class="tag-cloud-link">delicious</a>
-                        <a href="#" class="tag-cloud-link">desserts</a>
-                        <a href="#" class="tag-cloud-link">drinks</a>
                     </div>
                 </div>
             </div>

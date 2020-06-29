@@ -13,6 +13,15 @@ services:
     environment:
       - LC_ALL=C.UTF-8
 
+  redis:
+    image: redis:4.0.11
+    restart: "on-failure"
+    container_name: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ../redisdb:/var/lib/redis
+      
 networks:
     default:
         external:

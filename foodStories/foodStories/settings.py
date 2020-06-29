@@ -38,13 +38,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
     'taggit',
     'social_django',
     'stories',
     'account',
-    
-    
+    'rest_framework',
+    'rest_framework.authtoken',
+    # 'rest_auth',
+    'django.contrib.sites',
+    'django_celery_results',
+    'django_celery_beat',
+      
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -125,6 +129,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication'
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated'
+    ]
+}
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
@@ -177,11 +190,26 @@ SOCIAL_AUTH_FACEBOOK_EXTRA_DATA = [                 # add this
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '958585572793-25menfvtvp8tfsgqi5eukfs31h5b8rph.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'gcuPO6lUYraD1RcCsvptkGvH'
 
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.yandex.com'
-EMAIL_PORT: 587
-EMAIL_HOST_USER: 'ahmadovasara@yandex.ru'
-EMAIL_HOST_PASSWORD: '!!!!sara'
-EMAIL_USE_TLS: True
-EMAIL_USE_SSL: False
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.yandex.ru'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = 'ahmadovasara@yandex.ru'
+EMAIL_HOST_PASSWORD = '!!!!sara'
+EMAIL_USE_TLS = False
+EMAIL_USE_SSL = True
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # LIST_OF_EMAIL_RECIPIENTS = ['sara.axmedova98@gmail.com']
+
+
+# Celery stuff
+# CELERY STUFF
+CELERY_BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'django-cache'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'Africa/Nairobi'
+
+

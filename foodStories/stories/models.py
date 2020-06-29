@@ -1,11 +1,17 @@
 from django.db import models
 from django.utils.translation import gettext as _
 from taggit.managers import TaggableManager
+from taggit.models import TaggedItemBase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 # Create your models here.
 
 User = get_user_model()
+
+
+class TaggedStory(TaggedItemBase):
+    content_object = models.ForeignKey('Story', on_delete=models.CASCADE, related_name='story')
+
 
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=50)
@@ -14,12 +20,12 @@ class Story(models.Model):
     cover_image = models.ImageField(_("Cover image"), upload_to="stories",  max_length=None, default="stories/bg_4.jpg")
     story_count = models.IntegerField(_("Story count"), default=0)
     slug = models.SlugField(unique=True, max_length=100, blank=True, null=True)
-    tags = TaggableManager()
+    tags = TaggableManager(through=TaggedStory)
     
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name='stories')
     updated_at = models.DateField(_("Updated date"), auto_now=True)
     created_at = models.DateField(_("Created date"), auto_now_add=True, null = True)
-    user = models.ForeignKey("account.CustomUser", verbose_name=_("User"), on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey("account.CustomUser", verbose_name=_("User"), on_delete=models.CASCADE, null=True, related_name='recipe')
    
 
     class Meta:
@@ -44,7 +50,7 @@ class Recipe(models.Model):
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name='recipes')                                                                       
     updated_at = models.DateField(_("Updated date"), auto_now=True)
     created_at = models.DateField(_("Created date"), auto_now_add=True)
-    user = models.ForeignKey("account.CustomUser", verbose_name=_("User"), on_delete=models.CASCADE, null=True)
+    user = models.ForeignKey("account.CustomUser", verbose_name=_("User"), on_delete=models.CASCADE, null=True, related_name='user')
 
     class Meta:
         verbose_name = 'Recipe'
@@ -69,32 +75,17 @@ class Category(models.Model):
     def __str__(self):
         return self.title
     
-    
-    
-    
-class Tag(models.Model):
-    title = models.CharField(_("Title"), max_length=50, blank=True, null=True)
-
-    stories = models.ManyToManyField("stories.Story", verbose_name=_("Story"), related_name='stories')
-    recipes = models.ManyToManyField("stories.Recipe", verbose_name=_("Recipe"), related_name='recipes')
-    
-    class Meta:
-        verbose_name = 'Tag'
-        verbose_name_plural = 'Tags'
-    
-    def __str__(self):
-        return self.title
-
+ 
 class Comment(models.Model):
     name = models.CharField(_("Name"), max_length=50, default='user')
     email = models.EmailField(_("Email"), max_length=254, default='user@gmail.com')
     message = models.TextField(_("Description"))
     commented_at = models.DateField(_("Commented at"), auto_now_add=True)
     
-    comment_reply = models.ForeignKey("self", verbose_name=_("Comment"), on_delete=models.CASCADE, blank=True, null = True)
-    recipe = models.ForeignKey("stories.Recipe", verbose_name=_("Recipe"), on_delete=models.CASCADE, blank=True, null=True)
-    story = models.ForeignKey("stories.Story", verbose_name=_("Story"), on_delete=models.CASCADE, blank=True, null=True)
-    user = models.ForeignKey("account.CustomUser", verbose_name=_("User"), on_delete=models.CASCADE, blank=True, null=True)
+    comment_reply = models.ForeignKey("self", verbose_name=_("Comment"), on_delete=models.CASCADE, blank=True, null = True, related_name='comment')
+    recipe = models.ForeignKey("stories.Recipe", verbose_name=_("Recipe"), on_delete=models.CASCADE, blank=True, null=True, related_name='comment')
+    story = models.ForeignKey("stories.Story", verbose_name=_("Story"), on_delete=models.CASCADE, blank=True, null=True, related_name='comment')
+    user = models.ForeignKey("account.CustomUser", verbose_name=_("User"), on_delete=models.CASCADE, blank=True, null=True, related_name='comment')
    
     class Meta:
         verbose_name = 'Comment'
@@ -147,3 +138,11 @@ class SiteSettings(models.Model):
         return self.email
 
   
+class SumNumbers(models.Model):
+    sum = models.IntegerField(_("Sum"))
+    
+
+
+    def __str__(self):
+        return str(self.sum)
+

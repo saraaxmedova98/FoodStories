@@ -39,6 +39,7 @@ class UpdateUserView(UpdateView):
 class UserLoginView(LoginView):
     template_name = 'registration/login.html'
     form_class = LoginForm
+    success_url = reverse_lazy("stories:home")
 
 class UserPasswordChangeView(PasswordChangeView):
     template_name = 'accounts/change_password.html'
@@ -54,7 +55,7 @@ class UserPasswordResetView(PasswordResetView):
     form_class = ResetPasswordForm
     template_name = 'accounts/forget_password.html'
     email_template_name = 'accounts/password_reset_email.html'
-    success_url = reverse_lazy('stories:home')
+    success_url = reverse_lazy('account:login')
 
 class UserPasswordResetConfirmView(PasswordResetConfirmView):
     template_name = 'accounts/reset_password.html'
