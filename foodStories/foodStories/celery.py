@@ -19,6 +19,10 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 app.conf.beat_schedule = {
     'add-every-15-seconds': {
         'task': 'stories.tasks.subscribers_email',
+        'schedule': crontab(minute=0, hour=0)
+    },
+     'add-every-30-seconds': {
+        'task': 'stories.tasks.export_users_xls',
         'schedule': crontab()
     },
 }

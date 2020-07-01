@@ -23,7 +23,6 @@ from rest_framework.decorators import api_view, permission_classes
 
 User = get_user_model()
 
-
 class UserViewSet(viewsets.ModelViewSet):
     """
     This viewset automatically provides `list`, `create`, `retrieve`,

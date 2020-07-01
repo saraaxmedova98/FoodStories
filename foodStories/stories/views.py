@@ -30,12 +30,16 @@ class HomeView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         print(self.request.user)
-        context["recipes"] = Recipe.objects.all()[:2]
-        context['stories'] = Story.objects.all()[:4]
-        context['user_stories'] = Story.objects.filter(user = self.request.user)[:3]
-        context['categories'] = Category.objects.all()[:3]
-        context['user_profile'] = User.objects.get(email = self.request.user)
-        return context
+        if self.request.user.is_authenticated:
+            
+            context["recipes"] = Recipe.objects.all()[:2]
+            context['stories'] = Story.objects.all()[:4]
+            context['user_stories'] = Story.objects.filter(user = self.request.user)[:3]
+            context['categories'] = Category.objects.all()[:3]
+            context['user_profile'] = User.objects.get(email = self.request.user)
+            return context
+        else:
+            return reverse_lazy('account:login')
     
 
 class AboutView(TemplateView):
@@ -208,7 +212,7 @@ class RecipeCreateView(CreateView):
     form_class = RecipeForm
 
     def form_valid(self, form):
-        form.instance.users = self.request.user
+        form.instance.user = self.request.user
         form.save()
         return super().form_valid(form)
 

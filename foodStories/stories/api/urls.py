@@ -10,9 +10,10 @@ urlpatterns = [
     path('api/comments/',CommentList.as_view() ),
     path('api/comments/<int:pk>',CommentDetail.as_view() ),
     path('api/registration/',CreateRegister.as_view() ),
-    path('', views.obtain_auth_token, name='api_token_auth'),
+    # path('', views.obtain_auth_token, name='api_token_auth'),
     path('rest-auth/', include('rest_auth.urls')),
-    # path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('api-token-auth/', views.obtain_auth_token)
+   
    
   ] 
 
