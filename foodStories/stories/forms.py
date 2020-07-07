@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from stories.models import Contact, Subscribe, Story, Recipe, Comment
+from stories.models import Contact, Subscribe, Story, Recipe, Comment, StoryImage
 from django.core.mail import send_mail  
 
 class StoryForm(forms.ModelForm):
@@ -24,12 +24,18 @@ class StoryForm(forms.ModelForm):
             }),
             'category': forms.Select(attrs={
                 'class': 'form-control',
+            }),
+            'thumbnail': forms.FileInput(attrs={
+                'class': 'form-control',
+                'multiple': True
             })
             # 'story_image': forms.ClearableFileInput()
 
         }
        
-            
+# class StoryImageForm(forms.ModelForm):
+    # file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
+
 class RecipeForm(forms.ModelForm):
     
     class Meta:

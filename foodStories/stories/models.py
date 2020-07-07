@@ -16,11 +16,11 @@ class TaggedStory(TaggedItemBase):
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=50)
     description = models.TextField(_("Description"), default='')
-    story_image = models.ImageField(_("Story image"), upload_to="stories", max_length=100, blank=True, null=True)
-    cover_image = models.ImageField(_("Cover image"), upload_to="stories",  max_length=None, default="stories/bg_4.jpg")
+    story_image = models.ImageField(_("Story image"),upload_to='stories/', blank=True, null=True)
+    cover_image = models.ImageField(_("Cover image"), upload_to="stories/",  max_length=None, blank=True, null=True)
     story_count = models.IntegerField(_("Story count"), default=0)
     slug = models.SlugField(unique=True, max_length=100, blank=True, null=True)
-    tags = TaggableManager(through=TaggedStory)
+    tags = TaggableManager(through=TaggedStory, blank=True)
     
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name='stories')
     updated_at = models.DateField(_("Updated date"), auto_now=True)
@@ -39,13 +39,25 @@ class Story(models.Model):
         return reverse('stories:story_detail', kwargs={'pk': self.pk})
 
 
+class StoryImage(models.Model):
+    images = models.ImageField(_("Story image"), upload_to='stories/')
+    story = models.ForeignKey("stories.Story", on_delete=models.CASCADE,blank=True, null=True, related_name='images')
+
+    class Meta:
+        verbose_name = _("Story Image")
+        verbose_name_plural = _("Story Images")
+
+    def __str__(self):
+        return self.story.title
+
+
 class Recipe(models.Model):
     title = models.CharField(_("Title"), max_length=50)
     description = models.TextField(_("Description"), default='')
     ingredients = models.TextField(_("Ingredients"))
-    prepare_time = models.CharField(_("Prepare time"), max_length=50)
+    prepare_time = models.CharField(_("Prepare time"), max_length=50, blank=True, null=True)
     recipe_image = models.ImageField(_("Recipe Image"), upload_to='recipes/', blank=True, null=True)
-    cover_image = models.ImageField(_("Cover image"), upload_to='stories', default='bg_4.jpg')
+    cover_image = models.ImageField(_("Cover image"), upload_to='recipes/', default='bg_4.jpg')
     recipe_count = models.IntegerField(_("Recipe count"), default=0)
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name='recipes')                                                                       
     updated_at = models.DateField(_("Updated date"), auto_now=True)
@@ -82,7 +94,7 @@ class Comment(models.Model):
     message = models.TextField(_("Description"))
     commented_at = models.DateField(_("Commented at"), auto_now_add=True)
     
-    comment_reply = models.ForeignKey("self", verbose_name=_("Comment"), on_delete=models.CASCADE, blank=True, null = True, related_name='comment')
+    comment_reply = models.ForeignKey("self", verbose_name=_("Comment"), on_delete=models.CASCADE, blank=True, null = True, related_name='replies')
     recipe = models.ForeignKey("stories.Recipe", verbose_name=_("Recipe"), on_delete=models.CASCADE, blank=True, null=True, related_name='comment')
     story = models.ForeignKey("stories.Story", verbose_name=_("Story"), on_delete=models.CASCADE, blank=True, null=True, related_name='comment')
     user = models.ForeignKey("account.CustomUser", verbose_name=_("User"), on_delete=models.CASCADE, blank=True, null=True, related_name='comment')

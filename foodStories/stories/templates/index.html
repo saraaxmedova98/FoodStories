@@ -106,7 +106,7 @@
                                 <div class="text pt-3">
                                     <p class="meta d-flex"><span class="pr-3">{{story.category}}</span><span class="ml-auto pl-3">{{story.updated_at}}</span>
                                     </p>
-                                    <h3><a href="{% url 'stories:story_detail' story.pk %}">{{story.title}}</a></h3>
+                                    <h3><a href="{% url 'stories:story_detail' story.pk %}">{{story.title}}{{story.pk}}</a></h3>
                                     <p class="mb-0"><a href="{% url 'stories:story_detail' story.pk %}" class="btn-custom">Read More <span
                                         class="icon-arrow_forward ml-4"></span></a></p>
                                 </div>

@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
-from stories.forms import ContactForm, SubscribeForm, StoryForm, RecipeForm, CommentForm, SumForm
+from stories.forms import ContactForm, SubscribeForm, StoryForm , RecipeForm, CommentForm, SumForm
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView
-from stories.models import Recipe, Story, Category, Contact, Comment, SumNumbers, Subscribe
+from stories.models import Recipe, Story, StoryImage, Category, Contact, Comment, SumNumbers, Subscribe
 from account.models import CustomUser
 from django.db.models import Count
 from django.utils import timezone
@@ -94,6 +94,7 @@ class StoryList(ListView):
 class StoryCategoryList(ListView):
     context_object_name = 'stories'
     template_name='stories.html'
+    
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -110,13 +111,29 @@ class StoryDetail(FormMixin,DetailView):
     context_object_name = 'story'
     template_name='story_detail.html'
     form_class = CommentForm
+    # comment_form = CommentForm(data=request.POST)
+    
+    
+    # def post(self, request, *args, **kwargs):
+    #     form = CommentForm(request.POST)
+    def form_valid(self, form):
+        comment = form.save(commit=False)
+        comment.story = get_object_or_404(Story, pk=self.kwargs.get('pk'))
+        comment.save()
+        print('salam----------------------------------------------------------------------')
+        print(get_object_or_404(Story, pk=self.kwargs.get('pk')))
+
     def get_success_url(self):
         return reverse_lazy('stories:story_detail', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
+        # post = get_object_or_404(Story, id=pk)
+        # photos = StoryImage.objects.filter(story=Story.objects.filter(id = 3))
+        # print(photos)
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         context['stories'] = Story.objects.all()[:3]
+        context['story_images'] = StoryImage.objects.all()
         context['tags']= Story.tags.most_common()
         
         return context

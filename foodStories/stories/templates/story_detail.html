@@ -10,7 +10,8 @@
     <div class="container">
         <div class="row no-gutters slider-text align-items-end justify-content-center">
             <div class="col-md-9 ftco-animate pb-5 text-center">
-                <h1 class="mb-3 bread">{{story.title}}</h1>
+                <h1 class="mb-3 bread">{{story.title}}   {{story.images.all}}</h1>
+                
                 {% comment %} {{context.title}} {% endcomment %}
                 <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i
                         class="ion-ios-arrow-forward"></i></a></span> <span>Article Single<i
@@ -31,6 +32,9 @@
                     enim praesentium omnis, iste doloremque quia officia optio deserunt molestiae voluptates soluta
                     architecto tempora.</p>
                 <p>
+                {% comment %} {% for image in story.images %}
+                 <img src="{% url 'image.images.url' %}" alt="" class="img-fluid">
+                {% endfor %} {% endcomment %}
                     <img src="{% static 'images/image_6.jpg' %}" alt="" class="img-fluid">
                 </p>
                 <p>Molestiae cupiditate inventore animi, maxime sapiente optio, illo est nemo veritatis repellat sunt
@@ -176,7 +180,8 @@
                                 <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder">
                             </div>
                             <div class="comment-body">
-                                <h3>John Doe</h3>
+                                <h3>John Doe sddfffff</h3>
+                                {{story.comment.all}}
                                 <div class="meta">October 03, 2018 at 2:21pm</div>
                                 <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum
                                     necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente

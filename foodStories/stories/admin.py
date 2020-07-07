@@ -1,5 +1,6 @@
 from django.contrib import admin
-from stories.models import Contact, Recipe, Comment, Story , Category,Subscribe, SiteSettings, SumNumbers
+from stories.models import Contact, Recipe, Comment, Story , Category,Subscribe, SiteSettings,\
+     SumNumbers, StoryImage
 
 
 @admin.register(Contact)
@@ -26,8 +27,14 @@ class ContactAdmin(admin.ModelAdmin):
         queryset.update(username = 'user')
     change_user.short_description = 'change username'
 
+
+class StoryImageAdmin(admin.StackedInline):
+    model = StoryImage
+    
+
 @admin.register(Story)
 class StoryAdmin(admin.ModelAdmin):
+    inlines = [StoryImageAdmin]
     list_display = ['title', 'description', 'story_image', 'category','updated_at','created_at']
     ordering = ['created_at']
     search_fields = ['title']
@@ -47,6 +54,11 @@ class StoryAdmin(admin.ModelAdmin):
         }),
 
     )
+
+@admin.register(StoryImage)
+class StoryImageAdmin(admin.ModelAdmin):
+    list_display = ['images']
+    
 
 
 @admin.register(Recipe)
