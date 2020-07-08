@@ -19,29 +19,33 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from stories.api.serializers import StoryModelSerializer
 from stories.tasks import add , subscribers_email
+from account.forms import ProfileSearchForm
 # Create your views here.
 
 User = get_user_model()
 
-class HomeView(TemplateView):
+class HomeView(FormMixin, TemplateView):
     template_name = "index.html"
-
+    form_class = ProfileSearchForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         print(self.request.user)
-        if self.request.user.is_authenticated:
+        
+        context['categories'] = Category.objects.all()[:3]
+        context['user_profile'] = User.objects.get(email = self.request.user)
+        form = self.form_class(self.request.GET)
+        if form.is_valid():
+            context['stories'] = Story.objects.filter(title__icontains=form.cleaned_data['name'])[:4]
+            context['recipes'] = Recipe.objects.filter(title__icontains=form.cleaned_data['name'])[:2]
+            context['user_stories'] = Story.objects.filter(user = self.request.user).filter(title__icontains=form.cleaned_data['name'])[:3]
             
-            context["recipes"] = Recipe.objects.all()[:2]
-            context['stories'] = Story.objects.all()[:4]
-            context['user_stories'] = Story.objects.filter(user = self.request.user)[:3]
-            context['categories'] = Category.objects.all()[:3]
-            context['user_profile'] = User.objects.get(email = self.request.user)
-            return context
         else:
-            return reverse_lazy('account:login')
-    
-
+            context['stories'] = Story.objects.all()[:4]
+            context["recipes"] = Recipe.objects.all()[:2]
+            context['user_stories'] = Story.objects.filter(user = self.request.user)[:3]
+        return context
+       
 class AboutView(TemplateView):
     template_name = "about.html"
 
@@ -79,15 +83,23 @@ class StoryDeleteView(DeleteView):
     success_url = reverse_lazy('stories:stories')
 
 
-class StoryList(ListView):
+class StoryList(FormMixin,ListView):
     model = Story
     context_object_name = 'stories'
     template_name='stories.html'
+    form_class = ProfileSearchForm
+     
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()[:3]
         context['user'] = User.objects.get(email = self.request.user)
+        form = self.form_class(self.request.GET)
+        if form.is_valid():
+            context['stories'] = Story.objects.filter(title__icontains=form.cleaned_data['name'])
+           
+        else:
+            context["stories"] = Story.objects.all()
         return context
 
 
@@ -95,24 +107,23 @@ class StoryCategoryList(ListView):
     context_object_name = 'stories'
     template_name='stories.html'
     
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()[:3]
+       
         return context
 
     def get_queryset(self):
         self.category = get_object_or_404(Category, title=self.kwargs['category'])
         return Story.objects.filter(category=self.category)
-        # return Story.objects.filter(category=self.kwargs['category'])
+        
 
 class StoryDetail(FormMixin,DetailView):
     model = Story
     context_object_name = 'story'
     template_name='story_detail.html'
     form_class = CommentForm
-    # comment_form = CommentForm(data=request.POST)
-    
+    # comment_form = CommentForm(data=request.POST)  
     
     # def post(self, request, *args, **kwargs):
     #     form = CommentForm(request.POST)
@@ -120,7 +131,6 @@ class StoryDetail(FormMixin,DetailView):
         comment = form.save(commit=False)
         comment.story = get_object_or_404(Story, pk=self.kwargs.get('pk'))
         comment.save()
-        print('salam----------------------------------------------------------------------')
         print(get_object_or_404(Story, pk=self.kwargs.get('pk')))
 
     def get_success_url(self):
@@ -157,26 +167,33 @@ class StoryDetail(FormMixin,DetailView):
         form.save()
         return super().form_valid(form)
 
-class RecipeList(ListView):
+class RecipeList(FormMixin, ListView):
     model = Recipe
     context_object_name = 'recipes'
     template_name='recipes.html'
+    form_class = ProfileSearchForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
+        form = self.form_class(self.request.GET)
+        if form.is_valid():
+            context['recipes'] = Recipe.objects.filter(title__icontains=form.cleaned_data['name'])
+           
+        else:
+            context["recipes"] = Recipe.objects.all()
         return context
 
 
 class RecipeCategoriesList(ListView):
-   
     context_object_name = 'recipes'
     template_name='recipes.html'  
-
+    form_class = ProfileSearchForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()[:3]
+        
         return context
 
     def get_queryset(self):

@@ -94,11 +94,11 @@
                                 </div>
                     </div>
                     <div class="sidebar-box p-4 ftco-animate">
-                        <form action="#" class="search-form">
-                            <div class="form-group">
+                        <form action="#" method='GET' class="search-form">
+                                <div class="form-group">
+                                {{form.name}}
                                 <span class="icon icon-search"></span>
-                                <input type="text" class="form-control" placeholder="Search">
-                            </div>
+                                </div>
                         </form>
                     </div>
                     <div class="sidebar-box categories text-center ftco-animate">
@@ -108,14 +108,18 @@
                             <li>
                             {% if category.image %}
                                 <a href="{% url 'stories:recipe_category' category.title %}" class="img d-flex align-items-center justify-content-center text-center" style="background-image:url({{category.image.url}})">
-                                {% else %}
-                                 <a href="{% url 'stories:recipe_category' category.title %}" class="img d-flex align-items-center justify-content-center text-center" style="background-image:url({% static 'images/bg_1.jpg' %})">
-                               
-                                {% endif %}
-                                 <div class="text">
+                                    <div class="text">
                                         <h3>{{category.title}}</h3>
                                     </div>
                                 </a>
+                                {% else %}
+                                 <a href="{% url 'stories:recipe_category' category.title %}" class="img d-flex align-items-center justify-content-center text-center" style="background-image:url({% static 'images/bg_1.jpg' %})">
+                                    <div class="text">
+                                        <h3>{{category.title}}</h3>
+                                    </div>
+                                </a>
+                                {% endif %}
+                                
                             </li>
                            {% endfor %}
                           

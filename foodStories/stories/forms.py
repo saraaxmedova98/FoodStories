@@ -36,6 +36,7 @@ class StoryForm(forms.ModelForm):
 # class StoryImageForm(forms.ModelForm):
     # file_field = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))
 
+
 class RecipeForm(forms.ModelForm):
     
     class Meta:

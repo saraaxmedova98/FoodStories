@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView, DetailView
-from django.views.generic.edit import  CreateView, UpdateView
+from django.views.generic.edit import  CreateView, UpdateView,FormMixin
 from django.contrib.auth import get_user_model
 from account.forms import RegisterForm, LoginForm, UserEditForm, UserPasswordChangeForm,ResetPasswordForm,\
-    CustomResetPasswordForm
+    CustomResetPasswordForm, ProfileSearchForm
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView,\
@@ -63,15 +63,23 @@ class UserPasswordResetConfirmView(PasswordResetConfirmView):
     success_url = reverse_lazy("account:login")
 
 
-class UserProfileView(DetailView):
+class UserProfileView(FormMixin, DetailView):
     model = User
     template_name = "user_profile.html"
+    form_class = ProfileSearchForm
+        
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        print(self.request.user)
-        context["user_recipes"] = Recipe.objects.filter(user = self.request.user)
-        context["user_stories"] = Story.objects.filter(user = self.request.user)
+        
+        form = self.form_class(self.request.GET)
+        if form.is_valid():
+            context['user_stories'] = Story.objects.filter(user = self.request.user).filter(title__icontains=form.cleaned_data['name'])
+            context['user_recipes'] = Recipe.objects.filter(user = self.request.user).filter(title__icontains=form.cleaned_data['name'])
+        
+        else:
+            context["user_stories"] = Story.objects.filter(user = self.request.user)
+            context["user_recipes"] = Recipe.objects.filter(user = self.request.user)
         return context
     
 

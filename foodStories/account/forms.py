@@ -20,6 +20,13 @@ class CustomUserChangeForm(UserChangeForm):
         model = User
         fields = ('email',)
 
+class ProfileSearchForm(forms.Form):
+    name = forms.CharField(required=False,widget = forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder' : 'Search'
+            }))
+   
+
 class RegisterForm(UserCreationForm):
 
     class Meta:

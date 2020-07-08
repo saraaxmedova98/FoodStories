@@ -26,7 +26,7 @@ class CategoryTest(TestCase):
     def test_model_str(self):
         category = self.create_category()
         
-        self.assertEqual(str(category), 'Category title')
+        self.assertEqual(str(category), category.title)
 
 class StoryTest(TestCase):
 
@@ -48,7 +48,7 @@ class StoryTest(TestCase):
     def test_model_str(self):
         story = self.create_story()
         
-        self.assertEqual(str(story), 'Story title')
+        self.assertEqual(str(story), story.title)
 
 
 
@@ -72,7 +72,7 @@ class RecipeTest(TestCase):
     def test_model_str(self):
         recipe = self.create_recipe()
         
-        self.assertEqual(str(recipe), 'Recipe title')
+        self.assertEqual(str(recipe), recipe.title)
 
 
 class ContactTest(TestCase):
@@ -87,7 +87,7 @@ class ContactTest(TestCase):
     def test_model_str(self):
         contact = self.create_contact()
         
-        self.assertEqual(str(contact), 'Name')
+        self.assertEqual(str(contact), contact.name)
 
 
 
@@ -103,4 +103,4 @@ class SubsciberTest(TestCase):
     def test_model_str(self):
         subscriber = self.create_subscriber()
         
-        self.assertEqual(str(subscriber), 'admin@gmail.com')
+        self.assertEqual(str(subscriber), subscriber.email)
