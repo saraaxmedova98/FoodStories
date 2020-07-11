@@ -3,7 +3,8 @@ from django.http import HttpResponse
 from stories.forms import ContactForm, SubscribeForm, StoryForm , RecipeForm, CommentForm, SumForm
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView
-from stories.models import Recipe, Story, StoryImage, Category, Contact, Comment, SumNumbers, Subscribe
+from stories.models import Recipe, Story, StoryImage, Category, Contact, Comment, SumNumbers,\
+     Subscribe, TaggedStory
 from account.models import CustomUser
 from django.db.models import Count
 from django.utils import timezone
@@ -20,6 +21,8 @@ from rest_framework.parsers import JSONParser
 from stories.api.serializers import StoryModelSerializer
 from stories.tasks import add , subscribers_email
 from account.forms import ProfileSearchForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+
 # Create your views here.
 
 User = get_user_model()
@@ -31,14 +34,16 @@ class HomeView(FormMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         print(self.request.user)
-        
+        context['user_profile'] = User.objects.get_or_create(email = self.request.user)
         context['categories'] = Category.objects.all()[:3]
-        context['user_profile'] = User.objects.get(email = self.request.user)
+        context['all_stories'] = Story.objects.all()
+
         form = self.form_class(self.request.GET)
         if form.is_valid():
             context['stories'] = Story.objects.filter(title__icontains=form.cleaned_data['name'])[:4]
             context['recipes'] = Recipe.objects.filter(title__icontains=form.cleaned_data['name'])[:2]
-            context['user_stories'] = Story.objects.filter(user = self.request.user).filter(title__icontains=form.cleaned_data['name'])[:3]
+            if self.request.user:
+                context['user_stories'] = Story.objects.filter(user = self.request.user).filter(title__icontains=form.cleaned_data['name'])[:3]
             
         else:
             context['stories'] = Story.objects.all()[:4]
@@ -54,7 +59,7 @@ class AboutView(TemplateView):
         context["recipes"] = Recipe.objects.all()
         context['stories'] = Story.objects.all()
         context['categories'] = Category.objects.all()[:3]
-        # context['authors'] = Author.objects.all()
+        context['users'] = User.objects.all()
         return context
 
 
@@ -83,25 +88,28 @@ class StoryDeleteView(DeleteView):
     success_url = reverse_lazy('stories:stories')
 
 
-class StoryList(FormMixin,ListView):
+class StoryList(ListView):
     model = Story
     context_object_name = 'stories'
     template_name='stories.html'
-    form_class = ProfileSearchForm
-     
+    # form_class = ProfileSearchForm
+    paginate_by = 9
+    queryset = Story.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()[:3]
         context['user'] = User.objects.get(email = self.request.user)
-        form = self.form_class(self.request.GET)
-        if form.is_valid():
-            context['stories'] = Story.objects.filter(title__icontains=form.cleaned_data['name'])
-           
-        else:
-            context["stories"] = Story.objects.all()
+       
         return context
-
+    
+    def get_queryset(self):
+        if self.request.method == 'GET':
+            queryset = Story.objects.all()
+            title_name = self.request.GET.get('q', None)
+            if title_name is not None:
+                queryset = queryset.filter(title__icontains=title_name)
+            return queryset
 
 class StoryCategoryList(ListView):
     context_object_name = 'stories'
@@ -122,17 +130,8 @@ class StoryDetail(FormMixin,DetailView):
     model = Story
     context_object_name = 'story'
     template_name='story_detail.html'
-    form_class = CommentForm
-    # comment_form = CommentForm(data=request.POST)  
-    
-    # def post(self, request, *args, **kwargs):
-    #     form = CommentForm(request.POST)
-    def form_valid(self, form):
-        comment = form.save(commit=False)
-        comment.story = get_object_or_404(Story, pk=self.kwargs.get('pk'))
-        comment.save()
-        print(get_object_or_404(Story, pk=self.kwargs.get('pk')))
-
+    form_class = CommentForm  
+  
     def get_success_url(self):
         return reverse_lazy('stories:story_detail', kwargs={'pk': self.object.pk})
 
@@ -164,25 +163,32 @@ class StoryDetail(FormMixin,DetailView):
         else:
             return self.form_invalid(form)
     def form_valid(self, form):
-        form.save()
+        comment = form.save(commit=False)
+        comment.story = get_object_or_404(Story, pk=self.kwargs.get('pk'))
+        comment.save()
         return super().form_valid(form)
 
-class RecipeList(FormMixin, ListView):
+class RecipeList(ListView):
     model = Recipe
     context_object_name = 'recipes'
     template_name='recipes.html'
-    form_class = ProfileSearchForm
+    paginate_by = 9
+    queryset = Recipe.objects.all()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
-        form = self.form_class(self.request.GET)
-        if form.is_valid():
-            context['recipes'] = Recipe.objects.filter(title__icontains=form.cleaned_data['name'])
-           
-        else:
-            context["recipes"] = Recipe.objects.all()
+    
         return context
+    
+    def get_queryset(self):
+        if self.request.method == 'GET':
+            queryset = Recipe.objects.all()
+            title_name = self.request.GET.get('q', None)
+            if title_name is not None:
+                queryset = queryset.filter(title__icontains=title_name)
+            return queryset
+
 
 
 class RecipeCategoriesList(ListView):
@@ -215,6 +221,7 @@ class RecipeDetail(FormMixin ,DetailView):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         context['recipes'] = Recipe.objects.all()[:3]
+        context['tags']= Recipe.tags.most_common()
         return context
 
     def get_object(self):
@@ -297,7 +304,7 @@ class SubscribeView(FormView):
         messages.warning(self.request, 'Something went wrong!!')
         return super().form_invalid(form)
 
-
+    
 
 class EmailSubscribeView(View):
     def get(self, request, *args, **kwargs):

@@ -507,7 +507,14 @@ mark,
     object-fit: cover;
     
 }
-
+.user_img{
+    width: 173px;
+    height: 230px;
+    object-fit: cover;
+}
+.disp-none{
+    display: none;
+}
 .img-thumbnail {
     padding: 0.25rem;
     background-color: #fff;
@@ -8709,7 +8716,7 @@ button.bg-dark:focus {
 
 .mr-5,
 .mx-5 {
-    margin-right: 3rem !important;
+    margin-right: 1rem !important;
 }
 
 .mb-5,

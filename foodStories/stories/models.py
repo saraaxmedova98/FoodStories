@@ -10,8 +10,8 @@ User = get_user_model()
 
 
 class TaggedStory(TaggedItemBase):
-    content_object = models.ForeignKey('Story', on_delete=models.CASCADE, related_name='story')
-
+    content_object = models.ForeignKey('Story', on_delete=models.CASCADE, related_name='story', blank=True, null=True)
+   
 
 class Story(models.Model):
     title = models.CharField(_("Title"), max_length=50)
@@ -25,7 +25,7 @@ class Story(models.Model):
     category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name='stories')
     updated_at = models.DateField(_("Updated date"), auto_now=True)
     created_at = models.DateField(_("Created date"), auto_now_add=True, null = True)
-    user = models.ForeignKey("account.CustomUser", verbose_name=_("User"), on_delete=models.CASCADE, null=True, related_name='recipe')
+    user = models.ForeignKey("account.CustomUser", verbose_name=_("User"), on_delete=models.CASCADE, null=True, related_name='story')
    
 
     class Meta:
@@ -50,6 +50,9 @@ class StoryImage(models.Model):
     def __str__(self):
         return self.story.title
 
+class TaggedRecipe(TaggedItemBase):
+    content_object = models.ForeignKey('Recipe', on_delete=models.CASCADE, related_name='recipe')
+
 
 class Recipe(models.Model):
     title = models.CharField(_("Title"), max_length=50)
@@ -57,13 +60,15 @@ class Recipe(models.Model):
     ingredients = models.TextField(_("Ingredients"))
     prepare_time = models.CharField(_("Prepare time"), max_length=50, blank=True, null=True)
     recipe_image = models.ImageField(_("Recipe Image"), upload_to='recipes/', blank=True, null=True)
-    cover_image = models.ImageField(_("Cover image"), upload_to='recipes/', default='bg_4.jpg')
+    cover_image = models.ImageField(_("Cover image"), upload_to='recipes/', blank=True, null=True)
     recipe_count = models.IntegerField(_("Recipe count"), default=0)
-    category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name='recipes')                                                                       
+    tags = TaggableManager(through=TaggedRecipe, blank=True)
+
     updated_at = models.DateField(_("Updated date"), auto_now=True)
     created_at = models.DateField(_("Created date"), auto_now_add=True)
     user = models.ForeignKey("account.CustomUser", verbose_name=_("User"), on_delete=models.CASCADE, null=True, related_name='user')
-
+    category = models.ForeignKey("stories.Category", verbose_name=_("Category"), on_delete=models.CASCADE, blank=True, null=True, related_name='recipes')                                                                       
+    
     class Meta:
         verbose_name = 'Recipe'
         verbose_name_plural = 'Recipes'
@@ -89,8 +94,8 @@ class Category(models.Model):
     
  
 class Comment(models.Model):
-    name = models.CharField(_("Name"), max_length=50, default='user')
-    email = models.EmailField(_("Email"), max_length=254, default='user@gmail.com')
+    name = models.CharField(_("Name"), max_length=50)
+    email = models.EmailField(_("Email"), max_length=254)
     message = models.TextField(_("Description"))
     commented_at = models.DateField(_("Commented at"), auto_now_add=True)
     

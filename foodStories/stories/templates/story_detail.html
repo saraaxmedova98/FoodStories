@@ -5,21 +5,38 @@
 {% block middle_container %}
 {% load static %}
 
+{% if story.cover_image %}
 <section class="hero-wrap hero-wrap-2" style="background-image: url({{story.cover_image.url }});">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text align-items-end justify-content-center">
             <div class="col-md-9 ftco-animate pb-5 text-center">
-                <h1 class="mb-3 bread">{{story.title}}   {{story.images.all}}</h1>
+                <h1 class="mb-3 bread">{{story.title}}  </h1>
                 
-                {% comment %} {{context.title}} {% endcomment %}
-                <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i
-                        class="ion-ios-arrow-forward"></i></a></span> <span>Article Single<i
+                <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'stories:home' %}">Home <i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>Story Detail <i
                         class="ion-ios-arrow-forward"></i></span></p>
             </div>
         </div>
     </div>
 </section>
+{% else %}
+<section class="hero-wrap hero-wrap-2" style="background-image: url({% static 'images/blog-4.jpg' %});">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-center">
+            <div class="col-md-9 ftco-animate pb-5 text-center">
+                <h1 class="mb-3 bread">{{story.title}}  </h1>
+                
+                <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'stories:home' %}">Home <i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>Story Detail<i
+                        class="ion-ios-arrow-forward"></i></span></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
 
 <section class="ftco-section">
     <div class="container">
@@ -46,99 +63,88 @@
                     Exercitationem atque quidem tempora maiores ex architecto voluptatum aut officia doloremque. Error
                     dolore voluptas, omnis molestias odio dignissimos culpa ex earum nisi consequatur quos odit quasi
                     repellat qui officiis reiciendis incidunt hic non? Debitis commodi aut, adipisci.</p>
-                <p>
-                    <img src="{% static 'images/image_4.jpg' %}" alt="" class="img-fluid">
-                </p>
-                <p>Quisquam esse aliquam fuga distinctio, quidem delectus veritatis reiciendis. Nihil explicabo quod,
-                    est eos ipsum. Unde aut non tenetur tempore, nisi culpa voluptate maiores officiis quis vel ab
-                    consectetur suscipit veritatis nulla quos quia aspernatur perferendis, libero sint. Error, velit,
-                    porro. Deserunt minus, quibusdam iste enim veniam, modi rem maiores.</p>
-                <p>Odit voluptatibus, eveniet vel nihil cum ullam dolores laborum, quo velit commodi rerum eum quidem
-                    pariatur! Quia fuga iste tenetur, ipsa vel nisi in dolorum consequatur, veritatis porro explicabo
-                    soluta commodi libero voluptatem similique id quidem? Blanditiis voluptates aperiam non magni.
-                    Reprehenderit nobis odit inventore, quia laboriosam harum excepturi ea.</p>
-                <p>Adipisci vero culpa, eius nobis soluta. Dolore, maxime ullam ipsam quidem, dolor distinctio similique
-                    asperiores voluptas enim, exercitationem ratione aut adipisci modi quod quibusdam iusto, voluptates
-                    beatae iure nemo itaque laborum. Consequuntur et pariatur totam fuga eligendi vero dolorum
-                    provident. Voluptatibus, veritatis. Beatae numquam nam ab voluptatibus culpa, tenetur
-                    recusandae!</p>
-                <p>Voluptas dolores dignissimos dolorum temporibus, autem aliquam ducimus at officia adipisci quasi nemo
-                    a perspiciatis provident magni laboriosam repudiandae iure iusto commodi debitis est blanditiis
-                    alias laborum sint dolore. Dolores, iure, reprehenderit. Error provident, pariatur cupiditate soluta
-                    doloremque aut ratione. Harum voluptates mollitia illo minus praesentium, rerum ipsa debitis,
-                    inventore?</p>
+               
                 <div class="tag-widget post-tag-container mb-5 mt-5">
                     <div class="tagcloud">
-                    {% for item in related_items %}
-                     <a href="#" class="tag-cloud-link">{{item}}</a>
+                    {% for tag in story.tags.most_common %}
+                     <a href="#" class="tag-cloud-link">{{tag}}</a>
                     {% endfor %}
-                        <a href="#" class="tag-cloud-link">Life</a>
-                        <a href="#" class="tag-cloud-link">Sport</a>
-                        <a href="#" class="tag-cloud-link">Tech</a>
-                        <a href="#" class="tag-cloud-link">Travel</a>
                     </div>
                 </div>
-
+                
                 <div class="about-author d-flex p-4 bg-light">
                     <div class="bio mr-5">
-                        <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder" class="img-fluid mb-4">
-                    </div>
+                        {% if story.user.profile_image %}
+                        <img src="{{story.user.profile_image.url}}" alt="Image placeholder" class="user_img mb-4">
+                        {% else %}
+                        <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder" class="user_img mb-4">
+                        {% endif %}
+                     </div>
                     <div class="desc">
-                        <h3>George Washington</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem
-                            necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente
-                            consectetur similique, inventore eos fugit cupiditate numquam!</p>
+                        <h3>{{story.user.first_name}}</h3>
+                        <p>
+                        {{story.user.bio}}
+                        </p>
                     </div>
                 </div>
-
+                
 
                 <div class="pt-5 mt-5">
-                    <h3 class="mb-5">6 Comments</h3>
+                    <h3 class="mb-5">{{story.comment.all.count}} Comments</h3>
+
                     <ul class="comment-list">
+                        {% for comment in story.comment.all %}
                         <li class="comment">
                             <div class="vcard bio">
                                 <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder">
                             </div>
                             <div class="comment-body">
-                                <h3>John Doe</h3>
-                                <div class="meta">October 03, 2018 at 2:21pm</div>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum
-                                    necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente
-                                    iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                <p><a href="#" class="reply">Reply</a></p>
+                                <h3>{{comment.name}}</h3>
+                                <div class="meta">{{comment.commented_at}}</div>
+                                <p>{{comment.message|linebreaks}}</p>
+                                <p><a class="reply reply-comment">Reply</a></p>
+                                 <div class="comment-form-wrap pt-5 disp-none ">
+                                <h3 class="mb-5">Reply a comment</h3>
+                                <form class="p-5 bg-light" method="POST">
+                                    {% csrf_token %}    
+                                        <div class="form-group">
+                                            {{form.name.label_tag}}
+                                            {{form.name}}
+                                            {{form.name.errors}}
+                                        </div>
+                                        <div class="form-group">
+                                            {{form.email.label_tag}}
+                                            {{form.email}}
+                                            {{form.email.errors}}
+                                        </div>
+                                        <div class="form-group">
+                                            {{form.message.label_tag}}
+                                            {{form.message}}
+                                            {{form.message.errors}}
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="submit" value="Post Comment" class="btn py-3 px-4 btn-primary">
+                                        </div>
+            
+                                    </form>
                             </div>
-                        </li>
-
-                        <li class="comment">
-                            <div class="vcard bio">
-                                <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder">
                             </div>
-                            <div class="comment-body">
-                                <h3>John Doe</h3>
-                                <div class="meta">October 03, 2018 at 2:21pm</div>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum
-                                    necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente
-                                    iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                <p><a href="#" class="reply">Reply</a></p>
-                            </div>
-
+                           {% if comment.comment_reply %}
                             <ul class="children">
                                 <li class="comment">
                                     <div class="vcard bio">
                                         <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder">
                                     </div>
                                     <div class="comment-body">
-                                        <h3>John Doe</h3>
-                                        <div class="meta">October 03, 2018 at 2:21pm</div>
-                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem
-                                            laborum necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe
-                                            enim sapiente iste iure! Quam voluptas earum impedit necessitatibus,
-                                            nihil?</p>
+                                        <h3>{{comment.comment_reply.name}}</h3>
+                                        <div class="meta">{{comment.comment_reply.commented_at}}</div>
+                                        <p>{{comment.comment_reply}}</p>
                                         <p><a href="#" class="reply">Reply</a></p>
+                                        
                                     </div>
 
 
-                                    <ul class="children">
+                                    <!-- <ul class="children">
                                         <li class="comment">
                                             <div class="vcard bio">
                                                 <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder">
@@ -170,25 +176,13 @@
                                                 </li>
                                             </ul>
                                         </li>
-                                    </ul>
+                                    </ul> -->
                                 </li>
                             </ul>
+                           {% endif %}
+                          
                         </li>
-
-                        <li class="comment">
-                            <div class="vcard bio">
-                                <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder">
-                            </div>
-                            <div class="comment-body">
-                                <h3>John Doe sddfffff</h3>
-                                {{story.comment.all}}
-                                <div class="meta">October 03, 2018 at 2:21pm</div>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur quidem laborum
-                                    necessitatibus, ipsam impedit vitae autem, eum officia, fugiat saepe enim sapiente
-                                    iste iure! Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                <p><a href="#" class="reply">Reply</a></p>
-                            </div>
-                        </li>
+                        {% endfor %}
                     </ul>
                     <!-- END comment-list -->
 
@@ -233,7 +227,7 @@
                     <ul class="categories">
                         <h3 class="heading mb-4">Categories</h3>
                         {% for category in categories %}
-                        <li><a href="{% url 'stories:story_category' category.title|lower %}">{{category.title}} <span>{{category.stories.count}}</span></a></li>
+                        <li><a href="{% url 'stories:story_category' category.title %}">{{category.title}} <span>{{category.stories.count}}</span></a></li>
                         {% endfor %}
                         
                     </ul>

@@ -5,7 +5,7 @@
         <div class="container">
             <div class="row block-9 justify-content-center">
                 <div class="col-md-6 order-md-last d-flex">
-                    <form action="#" class="bg-light p-5 contact-form" method="POST">
+                    <form action="#" class="bg-light p-5 contact-form" method="POST" enctype="multipart/form-data">
                         <a class="navbar-brand center" href="#">Stories<span>.</span></a>
                         {% csrf_token %}
                         {% if messages %}
@@ -32,8 +32,14 @@
                            {{form.category.errors}}
                         </div>
                         <div class="form-group">
+                            {{form.story_image.label}}
                             {{form.story_image}}
                             {{form.story_image.errors}}
+                        </div>
+                        <div class="form-group">
+                            {{form.cover_image.label}}
+                            {{form.cover_image}}
+                            {{form.cover_image.errors}}
                         </div>
                         
                         <div class="form-group">

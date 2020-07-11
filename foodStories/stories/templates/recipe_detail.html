@@ -5,19 +5,35 @@
 {% block middle_container %}
 {% load static %}
 
+{% if recipe.cover_image %}
+<section class="hero-wrap hero-wrap-2" style="background-image: url({{ recipe.cover_image.url }});">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row no-gutters slider-text align-items-end justify-content-center">
+            <div class="col-md-9 ftco-animate pb-5 text-center">
+                <h1 class="mb-3 bread">{{recipe.title}}</h1>
+              <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'stories:home' %}">Home <i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>Recipe Detail<i
+                        class="ion-ios-arrow-forward"></i></span></p>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
 <section class="hero-wrap hero-wrap-2" style="background-image: url({% static 'images/bg_4.jpg' %});">
     <div class="overlay"></div>
     <div class="container">
         <div class="row no-gutters slider-text align-items-end justify-content-center">
             <div class="col-md-9 ftco-animate pb-5 text-center">
                 <h1 class="mb-3 bread">{{recipe.title}}</h1>
-              <p class="breadcrumbs"><span class="mr-2"><a href="index.html">Home <i
-                        class="ion-ios-arrow-forward"></i></a></span> <span>Article Single<i
+              <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'stories:home' %}">Home <i
+                        class="ion-ios-arrow-forward"></i></a></span> <span>Recipe Detail<i
                         class="ion-ios-arrow-forward"></i></span></p>
             </div>
         </div>
     </div>
 </section>
+{% endif %}
 
 <section class="ftco-section">
     <div class="container">
@@ -64,22 +80,25 @@
                     inventore?</p>
                 <div class="tag-widget post-tag-container mb-5 mt-5">
                     <div class="tagcloud">
-                        <a href="#" class="tag-cloud-link">Life</a>
-                        <a href="#" class="tag-cloud-link">Sport</a>
-                        <a href="#" class="tag-cloud-link">Tech</a>
-                        <a href="#" class="tag-cloud-link">Travel</a>
+                    {% for tag in recipe.tags.most_common %}
+                        <a href="#" class="tag-cloud-link">{{tag}}</a>
+                    {% endfor %}
                     </div>
                 </div>
 
-                <div class="about-author d-flex p-4 bg-light">
+                 <div class="about-author d-flex p-4 bg-light">
                     <div class="bio mr-5">
-                        <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder" class="img-fluid mb-4">
-                    </div>
+                        {% if recipe.user.profile_image %}
+                        <img src="{{recipe.user.profile_image.url}}" alt="Image placeholder" class="user_img mb-4">
+                        {% else %}
+                        <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder" class="user_img mb-4">
+                        {% endif %}
+                     </div>
                     <div class="desc">
-                        <h3>George Washington</h3>
-                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus itaque, autem
-                            necessitatibus voluptate quod mollitia delectus aut, sunt placeat nam vero culpa sapiente
-                            consectetur similique, inventore eos fugit cupiditate numquam!</p>
+                        <h3>{{recipe.user.first_name}}</h3>
+                        <p>
+                        {{recipe.user.bio}}
+                        </p>
                     </div>
                 </div>
 
@@ -224,7 +243,7 @@
                     <ul class="categories">
                         <h3 class="heading mb-4">Categories</h3>
                         {% for category in categories %}
-                        <li><a href="{% url 'stories:recipe_category' category.title|lower %}">{{category.title}} <span>{{category.recipes.count}}</span></a></li>
+                        <li><a href="{% url 'stories:recipe_category' category.title %}">{{category.title}} <span>{{category.recipes.count}}</span></a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -249,14 +268,9 @@
                 <div class="sidebar-box ftco-animate">
                     <h3 class="heading mb-4">Tag Cloud</h3>
                     <div class="tagcloud">
-                        <a href="#" class="tag-cloud-link">dish</a>
-                        <a href="#" class="tag-cloud-link">menu</a>
-                        <a href="#" class="tag-cloud-link">food</a>
-                        <a href="#" class="tag-cloud-link">sweet</a>
-                        <a href="#" class="tag-cloud-link">tasty</a>
-                        <a href="#" class="tag-cloud-link">delicious</a>
-                        <a href="#" class="tag-cloud-link">desserts</a>
-                        <a href="#" class="tag-cloud-link">drinks</a>
+                    {% for tag in tags %}
+                        <a href="#" class="tag-cloud-link">{{tag}}</a>
+                    {% endfor %}
                     </div>
                 </div>
             </div>

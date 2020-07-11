@@ -5,18 +5,22 @@
 {% block middle_container %}
 {% load static %}
     <section class="home-slider owl-carousel">
+       {% for story in all_stories %}
         <div class="slider-item">
             <div class="container">
                 <div class="row d-flex slider-text justify-content-center align-items-center" data-scrollax-parent="true">
-
-                    <div class="img" style="background-image: url({% static 'images/bg_1.jpg' %});"></div>
-
+                    {% if story.story_image %}
+                     <div class="img" style="background-image: url({{story.story_image.url}});"></div>
+                    {% else %}
+                     <div class="img" style="background-image: url({% static 'images/bg_1.jpg' %});"></div>
+                    {% endif %}
+                   
                     <div class="text d-flex align-items-center ftco-animate">
                         <div class="text-2 pb-lg-5 mb-lg-4 px-4 px-md-5">
                             <h3 class="subheading mb-3">Featured Posts</h3>
-                            <h1 class="mb-5">Love the Delicious &amp; Tasty Foods</h1>
-                            <p class="mb-md-5">A small river named Duden flows by their place and supplies it with the necessary regelialia</p>
-                            <p><a href="#" class="btn btn-black px-3 px-md-4 py-3">Read More <span
+                            <h1 class="mb-5">{{story.title}}</h1>
+                            <p class="mb-md-5">{{story.description}}</p>
+                            <p><a href="{% url 'stories:story_detail' story.pk %}" class="btn btn-black px-3 px-md-4 py-3">Read More <span
                                 class="icon-arrow_forward ml-lg-4"></span></a></p>
                         </div>
                     </div>
@@ -24,26 +28,7 @@
                 </div>
             </div>
         </div>
-
-        <div class="slider-item">
-            <div class="container">
-                <div class="row d-flex slider-text justify-content-center align-items-center" data-scrollax-parent="true">
-
-                    <div class="img" style="background-image: url({% static 'images/bg_2.jpg' %});"></div>
-
-                    <div class="text d-flex align-items-center ftco-animate">
-                        <div class="text-2 pb-lg-5 mb-lg-4 px-4 px-md-5">
-                            <h3 class="subheading mb-3">Featured Posts</h3>
-                            <h1 class="mb-5">I am A Blogger &amp; I Love Foods</h1>
-                            <p class="mb-md-5">A small river named Duden flows by their place and supplies it with the necessary regelialia</p>
-                            <p><a href="#" class="btn btn-black px-3 px-md-4 py-3">Read More <span
-                                class="icon-arrow_forward ml-lg-4"></span></a></p>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
+       {% endfor %}
     </section>
 
 
@@ -129,6 +114,7 @@
                             <h2 class="mb-4"><span>My Stories</span></h2>
                         </div>
                     </div>
+                 {% if user.is_authenticated %}
                     <div class="row">
                        {% for story in user_stories %}
                         <div class="col-md-4 ftco-animate">
@@ -152,16 +138,18 @@
                         </div>
                        {% endfor %}
                     </div>
+                {% endif %} 
                 </div>
 
                 <div class="col-lg-3">
                     <div class="sidebar-wrap">
+                        {% if user.is_authenticated %}
                         <div class="sidebar-box p-4 about text-center ftco-animate">
-                            <h2 class="heading mb-4">About Me</h2>
+                            <h2 class="heading mb-4">About Me </h2>
                             {% if user_profile.profile_image %}
                                     <img src="{{user_profile.profile_image.url}}" class="img-fluid" alt="Colorlib Template">
                                     {% else %}
-                                     <img src="{% static 'images/author.jpg' %}" class="img-fluid" alt="Colorlib Template">
+                                    <img src="{% static 'images/author.jpg' %}" class="img-fluid" alt="Colorlib Template">
                                     
                                     {% endif %}
                             <div class="text pt-4">
@@ -174,6 +162,9 @@
                                 </p>
                             </div>
                         </div>
+                        {% else %}
+                         <div class="sidebar-box p-4 about text-center ftco-animate"></div>
+                        {% endif %}
                         <div class="sidebar-box p-4 ftco-animate">
                             <form action="#" method='GET' class="search-form">
                                 <div class="form-group">

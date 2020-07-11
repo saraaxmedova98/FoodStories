@@ -125,8 +125,13 @@
 			$this.find('.dropdown-menu').removeClass('show');
 		// }, 100);
 	});
-
-
+	$('.reply-comment').click(function(){
+		$(this).parents('.comment-body').children('.disp-none').fadeToggle()
+	})
+	$('.nav-item').click(function(){
+		$(this).addClass('active')
+		console.log($(this))
+	})
 	$('#dropdown04').on('show.bs.dropdown', function () {
 	  console.log('show');
 	});

@@ -7,7 +7,7 @@ class StoryForm(forms.ModelForm):
     
     class Meta:
         model = Story
-        fields = ("title",'description', 'category','tags', 'story_image',)
+        fields = ("title",'description', 'category','tags', 'story_image','cover_image',)
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -41,7 +41,7 @@ class RecipeForm(forms.ModelForm):
     
     class Meta:
         model = Recipe
-        fields = ("title",'description','ingredients', 'category','prepare_time', 'recipe_image')
+        fields = ("title",'description','ingredients', 'category', 'tags','prepare_time', 'recipe_image','cover_image',)
         widgets = {
             'title': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -61,6 +61,11 @@ class RecipeForm(forms.ModelForm):
             }),
             'category': forms.Select(attrs={
                 'class': 'form-control',
+            }),
+            'tags': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder' : 'Tags',
+                'data-role': 'tagsinput'
             })
             
         }

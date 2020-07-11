@@ -53,15 +53,28 @@
                 <div class="row mt-5">
                     <div class="col text-center">
                         <div class="block-27">
-                            <ul>
-                                <li><a href="#">&lt;</a></li>
-                                <li class="active"><span>1</span></li>
-                                <li><a href="#">2</a></li>
-                                <li><a href="#">3</a></li>
-                                <li><a href="#">4</a></li>
-                                <li><a href="#">5</a></li>
-                                <li><a href="#">&gt;</a></li>
-                            </ul>
+                    {% if is_paginated %}
+                    <ul class="pagination d-flex justify-content-center">
+                        {% if page_obj.has_previous %}
+                        <li><a href="?page={{ page_obj.previous_page_number }}">&laquo;</a></li>
+                        {% else %}
+                        <li class="disabled"><span>&laquo;</span></li>
+                        {% endif %}
+                        {% for i in paginator.page_range %}
+                        {% if page_obj.number == i %}
+                            <li class="active"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                        {% else %}
+                            <li><a href="?page={{ i }}">{{ i }}</a></li>
+                        {% endif %}
+                        {% endfor %}
+                        {% if page_obj.has_next %}
+                        <li><a href="?page={{ page_obj.next_page_number }}">&raquo;</a></li>
+                        {% else %}
+                        <li class="disabled"><span>&raquo;</span></li>
+                        {% endif %}
+                    </ul>
+                    {% endif %}
+
                         </div>
                     </div>
                 </div>
@@ -88,15 +101,15 @@
                                 <span></span>
                                 {% endif %}
                             </div>
-                    </div>
-                    <div class="sidebar-box p-4 ftco-animate">
-                        <form action="#" method='GET' class="search-form">
+                        </div>
+                        <div class="sidebar-box p-4 ftco-animate">
+                         <form action="#" method='GET' class="search-form">
                                 <div class="form-group">
-                                {{form.name}}
+                                <input type='text' name='q' class='form-control' placeholder='Search' />
                                 <span class="icon icon-search"></span>
                                 </div>
-                        </form>
-                    </div>
+                        </form> 
+                        </div>
                     <div class="sidebar-box categories text-center ftco-animate">
                         <h2 class="heading mb-4">Categories</h2>
                         <ul class="category-image">

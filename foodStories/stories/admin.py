@@ -69,7 +69,7 @@ class RecipeAdmin(admin.ModelAdmin):
     list_filter = ['created_at','category']
     fieldsets = (
         ('Required Fields', {
-            "fields": ('title','ingredients','prepare_time',),
+            "fields": ('title','ingredients','prepare_time','tags',),
         }),
         ('Optional Fields', {
             "fields": ('description','recipe_image','cover_image',),
@@ -86,13 +86,13 @@ class RecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['message', 'recipe', 'story']
+    list_display = ['name','email', 'message', 'recipe', 'story']
     ordering = ['message']
     search_fields = ['message']
     list_filter = ['commented_at', 'recipe', 'story']
     fieldsets = (
         ('Required Fields', {
-            "fields": ('message',),
+            "fields": ('name','email','message',),
         }),
         ('Relational Fields', {
             "fields": ('comment_reply','recipe', 'story',),

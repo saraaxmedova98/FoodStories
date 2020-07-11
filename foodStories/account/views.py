@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView,\
     PasswordResetConfirmView
 from stories.models import Recipe, Story
-
+from django.shortcuts import redirect
 # Create your views here.
 
 User = get_user_model()
@@ -19,6 +19,19 @@ class CreateRegisterView(CreateView):
     form_class = RegisterForm
     template_name = 'accounts/register.html'
     success_url = reverse_lazy('account:login')
+
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Check that user signup is allowed before even bothering to
+        dispatch or do other processing.
+
+        """
+        if request.user.is_authenticated:
+            return redirect('stories:home')
+        if not self.registration_allowed(request):
+            return redirect(self.disallowed_url)
+        return super(RegistrationView, self).dispatch(request, *args, **kwargs)
+
 
     def form_valid(self, form):
         form.save()

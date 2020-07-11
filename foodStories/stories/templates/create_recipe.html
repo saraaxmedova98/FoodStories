@@ -5,7 +5,7 @@
         <div class="container">
             <div class="row block-9 justify-content-center">
                 <div class="col-md-6 order-md-last d-flex">
-                    <form action="#" class="bg-light p-5 contact-form" method="POST">
+                    <form action="#" class="bg-light p-5 contact-form" method="POST" enctype="multipart/form-data">
                         <a class="navbar-brand center" href="#">Stories<span>.</span></a>
                         {% csrf_token %}
                         {% if messages %}
@@ -40,6 +40,9 @@
                            {{form.category.errors}}
                         </div>
                         <div class="form-group">
+                            {{form.tags}}
+                        </div>
+                        <div class="form-group">
                             {% comment %} <div class="container">
                             
                             <div class="tag-container">
@@ -52,10 +55,15 @@
                             
                         </div> 
                         <div class="form-group">
+                            {{form.recipe_image.label}}
                             {{form.recipe_image}}
                             {{form.recipe_image.errors}}
                         </div>
-                        
+                        <div class="form-group">
+                            {{form.cover_image.label}}
+                            {{form.cover_image}}
+                            {{form.cover_image.errors}}
+                        </div>
                         <div class="form-group">
                             <input type="submit" value="Create" class="btn btn-primary py-3 px-5">
                         </div>
