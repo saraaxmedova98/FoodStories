@@ -108,13 +108,15 @@
     <section class="ftco-section ftco-no-pt">
         <div class="container">
             <div class="row">
+                
                 <div class="col-lg-9">
+                    {% if user.is_authenticated %}
                     <div class="row">
                         <div class="col-md-12 heading-section ftco-animate">
                             <h2 class="mb-4"><span>My Stories</span></h2>
                         </div>
                     </div>
-                 {% if user.is_authenticated %}
+                
                     <div class="row">
                        {% for story in user_stories %}
                         <div class="col-md-4 ftco-animate">
@@ -138,9 +140,9 @@
                         </div>
                        {% endfor %}
                     </div>
-                {% endif %} 
+                    {% endif %} 
                 </div>
-
+               
                 <div class="col-lg-3">
                     <div class="sidebar-wrap">
                         {% if user.is_authenticated %}

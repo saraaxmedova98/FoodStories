@@ -83,8 +83,8 @@
             <div class="col-lg-3">
                 <div class="sidebar-wrap">
                     <div class="sidebar-box p-4 about text-center ftco-animate">
+                        {% if user.is_authenticated %}
                         <h2 class="heading mb-4">About Me</h2>
-                        <img src="images/author.jpg" class="img-fluid" alt="Colorlib Template">
                         <div class="text pt-4">
                            {% if user.profile_image %}
                             <img src="{{user.profile_image.url}}" class="img-fluid" alt="Colorlib Template">
@@ -101,8 +101,9 @@
                                 <span></span>
                                 {% endif %}
                             </div>
-                        </div>
-                        <div class="sidebar-box p-4 ftco-animate">
+                         </div>
+                         {% endif %}
+                         <div class="sidebar-box p-4 ftco-animate">
                          <form action="#" method='GET' class="search-form">
                                 <div class="form-group">
                                 <input type='text' name='q' class='form-control' placeholder='Search' />

@@ -42,7 +42,7 @@ class HomeView(FormMixin, TemplateView):
         if form.is_valid():
             context['stories'] = Story.objects.filter(title__icontains=form.cleaned_data['name'])[:4]
             context['recipes'] = Recipe.objects.filter(title__icontains=form.cleaned_data['name'])[:2]
-            if self.request.user:
+            if self.request.user.is_authenticated:
                 context['user_stories'] = Story.objects.filter(user = self.request.user).filter(title__icontains=form.cleaned_data['name'])[:3]
             
         else:
@@ -92,20 +92,18 @@ class StoryList(ListView):
     model = Story
     context_object_name = 'stories'
     template_name='stories.html'
-    # form_class = ProfileSearchForm
     paginate_by = 9
-    queryset = Story.objects.all()
+    queryset = Story.objects.order_by('id')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categories"] = Category.objects.all()[:3]
-        context['user'] = User.objects.get(email = self.request.user)
+        context["categories"] = Category.objects.order_by('id')[:3]
        
         return context
     
     def get_queryset(self):
         if self.request.method == 'GET':
-            queryset = Story.objects.all()
+            queryset = Story.objects.order_by('id')
             title_name = self.request.GET.get('q', None)
             if title_name is not None:
                 queryset = queryset.filter(title__icontains=title_name)
@@ -173,17 +171,17 @@ class RecipeList(ListView):
     context_object_name = 'recipes'
     template_name='recipes.html'
     paginate_by = 9
-    queryset = Recipe.objects.all()
+    queryset = Recipe.objects.order_by('id')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categories"] = Category.objects.all()
+        context["categories"] = Category.objects.order_by('id')
     
         return context
     
     def get_queryset(self):
         if self.request.method == 'GET':
-            queryset = Recipe.objects.all()
+            queryset = Recipe.objects.order_by('id')
             title_name = self.request.GET.get('q', None)
             if title_name is not None:
                 queryset = queryset.filter(title__icontains=title_name)
