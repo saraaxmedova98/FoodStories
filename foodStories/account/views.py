@@ -20,17 +20,17 @@ class CreateRegisterView(CreateView):
     template_name = 'accounts/register.html'
     success_url = reverse_lazy('account:login')
 
-    def dispatch(self, request, *args, **kwargs):
-        """
-        Check that user signup is allowed before even bothering to
-        dispatch or do other processing.
+    # def dispatch(self, request, *args, **kwargs):
+    #     """
+    #     Check that user signup is allowed before even bothering to
+    #     dispatch or do other processing.
 
-        """
-        if request.user.is_authenticated:
-            return redirect('stories:home')
-        if not self.registration_allowed(request):
-            return redirect(self.disallowed_url)
-        return super(RegistrationView, self).dispatch(request, *args, **kwargs)
+    #     """
+    #     if request.user.is_authenticated:
+    #         return redirect('stories:home')
+    #     if not self.registration_allowed(request):
+    #         return redirect(self.disallowed_url)
+    #     return super(RegistrationView, self).dispatch(request, *args, **kwargs)
 
 
     def form_valid(self, form):

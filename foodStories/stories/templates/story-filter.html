@@ -1,0 +1,22 @@
+{% load static %}
+
+{% for story in stories %}
+    <div class="col-md-4 ">
+        <div class="blog-entry">
+            {% if story.story_image %}
+                <a href="{% url 'stories:story_detail' story.pk %}" class="img-2"><img src="{{story.story_image.url}}" class="img-fluid"
+                                                        alt="Colorlib Template"></a>
+            {% else %}
+                <a href="{% url 'stories:story_detail' story.pk %}" class="img-2"><img src="{% static 'images/blog-1.jpg' %}" class="img-fluid"
+                                                        alt="Colorlib Template"></a>
+            {% endif %}
+            <div class="text pt-3">
+                <p class="meta d-flex"><span class="pr-3">{{story.category}}</span><span class="ml-auto pl-3">{{story.updated_at}}</span>
+                </p>
+                <h3><a href="{% url 'stories:story_detail' story.pk %}">{{story.title}}</a></h3>
+                <p class="mb-0"><a href="{% url 'stories:story_detail' story.pk %}" class="btn btn-black py-2">Read More <span
+                        class="icon-arrow_forward ml-4"></span></a></p>
+            </div>
+        </div>
+    </div>
+{% endfor %}

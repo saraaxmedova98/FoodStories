@@ -92,7 +92,7 @@ class StoryList(ListView):
     model = Story
     context_object_name = 'stories'
     template_name='stories.html'
-    paginate_by = 9
+    paginate_by = 6
     queryset = Story.objects.order_by('id')
 
     def get_context_data(self, **kwargs):
@@ -112,6 +112,7 @@ class StoryList(ListView):
 class StoryCategoryList(ListView):
     context_object_name = 'stories'
     template_name='stories.html'
+    paginate_by = 6
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -121,8 +122,43 @@ class StoryCategoryList(ListView):
 
     def get_queryset(self):
         self.category = get_object_or_404(Category, title=self.kwargs['category'])
+        if self.request.method == 'GET':
+            queryset = Story.objects.filter(category = self.category)
+            title_name = self.request.GET.get('q', None)
+            if title_name is not None:
+                queryset = queryset.filter(title__icontains=title_name)
+            return queryset
         return Story.objects.filter(category=self.category)
         
+
+class StoryFilterView(ListView):
+    model = Story
+    template_name = "story-filter.html"
+    context_object_name = 'stories'
+    show_change_link = True
+    paginate_by = 6
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.order_by('id')[:3]
+       
+        return context
+
+    def get_queryset(self):
+        # queryset = super().get_queryset()
+        queryset = Story.objects.all()
+        sort_data = self.request.GET.get('storySort')
+        print(sort_data)
+        if sort_data == 'newest':
+            return queryset.order_by('-created_at')
+        elif sort_data == 'oldest':
+            return queryset.order_by('created_at')
+        elif sort_data == 'famous':
+            return queryset.order_by('-story_count')
+        
+        
+        return queryset
+
 
 class StoryDetail(FormMixin,DetailView):
     model = Story
@@ -170,7 +206,7 @@ class RecipeList(ListView):
     model = Recipe
     context_object_name = 'recipes'
     template_name='recipes.html'
-    paginate_by = 9
+    paginate_by = 4
     queryset = Recipe.objects.order_by('id')
 
     def get_context_data(self, **kwargs):
@@ -193,6 +229,7 @@ class RecipeCategoriesList(ListView):
     context_object_name = 'recipes'
     template_name='recipes.html'  
     form_class = ProfileSearchForm
+    paginate_by = 4
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -202,6 +239,12 @@ class RecipeCategoriesList(ListView):
 
     def get_queryset(self):
         self.category = get_object_or_404(Category, title=self.kwargs['category'])
+        if self.request.method == 'GET':
+            queryset = Recipe.objects.filter(category = self.category)
+            title_name = self.request.GET.get('q', None)
+            if title_name is not None:
+                queryset = queryset.filter(title__icontains=title_name)
+            return queryset
         return Recipe.objects.filter(category=self.category)
     
 

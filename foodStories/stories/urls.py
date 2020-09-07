@@ -1,7 +1,5 @@
 from django.urls import path
-from stories.views import ContactCreateView, SubscribeView, RecipeList,RecipeDetail, StoryList,StoryDetail,\
-         StoryCreateView, StoryUpdateView, AboutView,HomeView, StoryCategoryList,RecipeCategoriesList, RecipeCreateView, \
-             RecipeUpdateView,RecipeDeleteView, StoryDeleteView,SumCreateView, EmailSubscribeView
+from stories.views import *
 from stories.api.urls import urlpatterns as api_urls
 
 
@@ -11,6 +9,7 @@ urlpatterns = [
     path('', HomeView.as_view(), name='home' ),
     path('about/', AboutView.as_view(), name='about' ),
     path('stories/', StoryList.as_view(), name='stories' ),
+    path('stories/filter', StoryFilterView.as_view(), name='story-filter' ),
     path('stories/<int:pk>', StoryDetail.as_view(), name='story_detail' ),
     path("stories/<category>", StoryCategoryList.as_view(), name="story_category"),
     path("story/create", StoryCreateView.as_view(), name="create_story"),

@@ -85,6 +85,46 @@
     <script src="{% static 'js/main.js' %}"></script>
     <script src="{% static 'js/taginputs.js' %}"></script>
 
+    <script>
+        $(document).ready(function(){
+            $('.nav-link').click(function(){
+                console.log($(this), 'ddddddd');
+            })
+            console.log($('.nav-link'));
+            console.log($('#storyFilter'));
+
+        })
+        document.querySelectorAll('form#storyFilter > select').forEach(select_element => {
+            select_element.addEventListener('change', ()=>{
+                console.log(select_element.value);
+                const filterData = $('#storyFilter').serialize();
+                console.log(filterData);
+                    $.ajax({
+                        url: `{% url 'stories:story-filter' %}?${filterData}`,
+                        // data : filterData,
+                        success: function(data){
+                            console.log($('#storiess-Box'));
+                            document.querySelector('#storiess-Box').innerHTML = data;
+                            
+                        },
+                        error: function(data){
+                            alert('error');
+                        }
+                    }).then(function(){
+                        
+                        for(var index = 0; index < $('.rating-box').length; index++ ){
+                            for(var i = 0; i< parseInt($('.rating-box').eq(index).data('type'));i++){
+                                $('.rating-box').eq(index).find('i').eq(i).removeClass('far').addClass('fas')
+                            }
+                        }
+
+                    });
+                    
+                    
+            })
+        })
+    </script>
+
 </body>
 
 </html>

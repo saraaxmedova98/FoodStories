@@ -23,7 +23,7 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-9">
-                <div class="row">
+                <div class="row " id="repipesBox">
                   {% for recipe in recipes %}
                     <div class="col-md-6 col-lg-12 ftco-animate">
                         <div class="blog-entry d-lg-flex">
@@ -86,27 +86,39 @@
             <div class="col-lg-3">
                 <div class="sidebar-wrap">
                     <div class="sidebar-box p-4 about text-center ftco-animate">
-                         {% if user.is_authenticated %}
-                        <h2 class="heading mb-4">About Me</h2>
-                        <img src="images/author.jpg" class="img-fluid" alt="Colorlib Template">
-                        <div class="text pt-4">
-                             {% if user.profile_image %}
-                            <img src="{{user.profile_image.url}}" class="img-fluid" alt="Colorlib Template">
-                            {% else %}
-                            <img src="{% static 'images/author.jpg' %}" class="img-fluid" alt="Colorlib Template">
-                            
-                            {% endif %}
-                            <div class="text pt-4">
-                            
-                                <p>Hi! My name is <strong>{{user.first_name}} {{user.last_name}}. </strong>
-                                {% if user.bio %}
-                                <span> {{user.bio}}</span>
-                                {% else %}
-                                <span></span>
-                                {% endif %}
+                        {% if user.is_authenticated %}
+                            <div class="recipe-sort d-flex align-items-center justify-content-center mb-3">
+                                <div class="d-flex">
+                                    <form id="recipeFilter" class="recipe-sort-form" >
+                                        <select name="recipeSort" class="form-control">
+                                            <option value="newest">Newest</option>
+                                            <option value="oldest">Oldest</option>
+                                            <option value="famous">Famous</option>
+                                        </select>
+                                    </form>
                                 </div>
+                            </div> 
+                            <h2 class="heading mb-4">About Me</h2>
+                            <img src="images/author.jpg" class="img-fluid" alt="Colorlib Template">
+                            <div class="text pt-4">
+                                {% if user.profile_image %}
+                                <img src="{{user.profile_image.url}}" class="img-fluid" alt="Colorlib Template">
+                                {% else %}
+                                <img src="{% static 'images/author.jpg' %}" class="img-fluid" alt="Colorlib Template">
+                                
+                                {% endif %}
+                                <div class="text pt-4">
+                                    <p>Hi! My name is <strong>{{user.first_name}} {{user.last_name}}. </strong>
+                                    {% if user.bio %}
+                                    <span> {{user.bio}}</span>
+                                    {% else %}
+                                    <span></span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
                     </div>
-                    {% endif %}
+                    
                     <div class="sidebar-box p-4 ftco-animate">
                         <form action="#" method='GET' class="search-form">
                                 <div class="form-group">
