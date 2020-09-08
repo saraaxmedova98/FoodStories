@@ -82,7 +82,6 @@
             <div class="col-lg-3">
                 <div class="sidebar-wrap">
                     <div class="sidebar-box p-4 about text-center ftco-animate">
-                        {% if user.is_authenticated %}
                         <div class="story-sort d-flex align-items-center justify-content-center mb-3">
                             <div class="d-flex">
                                 <form id="storyFilter" class="story-sort-form" >
@@ -94,6 +93,8 @@
                                 </form>
                             </div>
                         </div> 
+                        {% if user.is_authenticated %}
+                        
                         <h2 class="heading mb-4">About Me</h2>
                         <div class="text pt-4">
                            {% if user.profile_image %}

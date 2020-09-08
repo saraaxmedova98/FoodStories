@@ -16,6 +16,7 @@ urlpatterns = [
     path("story/update/<int:pk>", StoryUpdateView.as_view(), name="update_story"),
     path('story/delete/<int:pk>', StoryDeleteView.as_view(), name='delete_story'),
     path('recipes/', RecipeList.as_view(), name='recipes' ),
+    path('recipes/filter', RecipeFilterView.as_view(), name='recipe-filter' ),
     path('recipes/<int:pk>', RecipeDetail.as_view(), name='recipe_detail' ),
     path("recipes/<category>", RecipeCategoriesList.as_view(), name="recipe_category"),
     path('recipe/create', RecipeCreateView.as_view(), name='create_recipe'),

@@ -38,6 +38,12 @@ class HomeView(FormMixin, TemplateView):
         context['categories'] = Category.objects.all()[:3]
         context['all_stories'] = Story.objects.all()
 
+        story_list = []
+        for story in Story.objects.all():
+            story_list.append(story.created_at)
+        
+        context['story_list'] = story_list
+
         form = self.form_class(self.request.GET)
         if form.is_valid():
             context['stories'] = Story.objects.filter(title__icontains=form.cleaned_data['name'])[:4]
@@ -248,6 +254,35 @@ class RecipeCategoriesList(ListView):
         return Recipe.objects.filter(category=self.category)
     
 
+class RecipeFilterView(ListView):
+    model = Recipe
+    template_name = "recipe-filter.html"
+    context_object_name = 'recipes'
+    show_change_link = True
+    paginate_by = 6
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.order_by('id')[:3]
+       
+        return context
+
+    def get_queryset(self):
+        # queryset = super().get_queryset()
+        queryset = Recipe.objects.all()
+        sort_data = self.request.GET.get('recipeSort')
+        print(sort_data)
+        if sort_data == 'newest':
+            return queryset.order_by('-created_at')
+        elif sort_data == 'oldest':
+            return queryset.order_by('created_at')
+        elif sort_data == 'famous':
+            return queryset.order_by('-recipe_count')
+        
+        
+        return queryset
+
+
 class RecipeDetail(FormMixin ,DetailView):
     model = Recipe
     context_object_name = 'recipe'
@@ -287,6 +322,14 @@ class RecipeDetail(FormMixin ,DetailView):
     def form_valid(self, form):
         form.save()
         return super().form_valid(form)
+    
+    def get_queryset(self):
+        if self.request.method == 'GET':
+            queryset = Recipe.objects.filter(pk=self.kwargs.get('pk'))
+            title_name = self.request.GET.get('q', None)
+            if title_name is not None:
+                queryset = queryset.filter(description__icontains=title_name)
+            return queryset
 
 class RecipeCreateView(CreateView):
     model = Recipe

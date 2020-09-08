@@ -5,35 +5,35 @@
 {% block middle_container %}
 {% load static %}
 {% if story.cover_image %}
-<section class="hero-wrap hero-wrap-2" style="background-image: url({{story.cover_image.url }});">
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="row no-gutters slider-text align-items-end justify-content-center">
-            <div class="col-md-9 ftco-animate pb-5 text-center">
-                <h1 class="mb-3 bread">{{story.title}}  </h1>
-                
-                <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'stories:home' %}">Home <i
-                        class="ion-ios-arrow-forward"></i></a></span> <span>Story Detail <i
-                        class="ion-ios-arrow-forward"></i></span></p>
+    <section class="hero-wrap hero-wrap-2" style="background-image: url({{ story.cover_image.url }});">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end justify-content-center">
+                <div class="col-md-9 ftco-animate pb-5 text-center">
+                    <h1 class="mb-3 bread">{{story.title}}  </h1>
+                    
+                    <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'stories:home' %}">Home <i
+                            class="ion-ios-arrow-forward"></i></a></span> <span>Story Detail <i
+                            class="ion-ios-arrow-forward"></i></span></p>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 {% else %}
-<section class="hero-wrap hero-wrap-2" style="background-image: url({% static 'images/blog-4.jpg' %});">
-    <div class="overlay"></div>
-    <div class="container">
-        <div class="row no-gutters slider-text align-items-end justify-content-center">
-            <div class="col-md-9 ftco-animate pb-5 text-center">
-                <h1 class="mb-3 bread">{{story.title}}  </h1>
-                
-                <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'stories:home' %}">Home <i
-                        class="ion-ios-arrow-forward"></i></a></span> <span>Story Detail<i
-                        class="ion-ios-arrow-forward"></i></span></p>
+    <section class="hero-wrap hero-wrap-2" style="background-image: url({% static 'images/blog-4.jpg' %});">
+        <div class="overlay"></div>
+        <div class="container">
+            <div class="row no-gutters slider-text align-items-end justify-content-center">
+                <div class="col-md-9 ftco-animate pb-5 text-center">
+                    <h1 class="mb-3 bread">{{story.title}}  </h1>
+                    
+                    <p class="breadcrumbs"><span class="mr-2"><a href="{% url 'stories:home' %}">Home <i
+                            class="ion-ios-arrow-forward"></i></a></span> <span>Story Detail<i
+                            class="ion-ios-arrow-forward"></i></span></p>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 {% endif %}
 
 
@@ -42,16 +42,13 @@
         <div class="row">
             <div class="col-lg-8 order-lg-last ftco-animate">
                 <h2 class="mb-3">{{story.title}}</h2>
-                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Reiciendis, eius mollitia suscipit,
-                    quisquam doloremque distinctio perferendis et doloribus unde architecto optio laboriosam porro
-                    adipisci sapiente officiis nemo accusamus ad praesentium? Esse minima nisi et. Dolore perferendis,
-                    enim praesentium omnis, iste doloremque quia officia optio deserunt molestiae voluptates soluta
-                    architecto tempora.</p>
+                <p>{{story.description}}</p>
                 <p>
-                {% comment %} {% for image in story.images %}
-                 <img src="{% url 'image.images.url' %}" alt="" class="img-fluid">
-                {% endfor %} {% endcomment %}
-                    <img src="{% static 'images/image_6.jpg' %}" alt="" class="img-fluid">
+                    {% if story.story_image %}
+                        <img src="{{story.story_image.url}}" alt="" class="img-fluid">
+                    {% else %}
+                        <img src="{% static 'images/image_6.jpg' %}" alt="" class="img-fluid">
+                    {% endif %}
                 </p>
                 <p>Molestiae cupiditate inventore animi, maxime sapiente optio, illo est nemo veritatis repellat sunt
                     doloribus nesciunt! Minima laborum magni reiciendis qui voluptate quisquam voluptatem soluta illo
@@ -218,7 +215,7 @@
                     <form action="#" class="search-form">
                         <div class="form-group">
                             <span class="icon icon-search"></span>
-                            <input type="text" class="form-control" placeholder="Type a keyword and hit enter">
+                            <input type="text" class="form-control" placeholder="Type a keyword and hit enter" name='q'>
                         </div>
                     </form>
                 </div>
