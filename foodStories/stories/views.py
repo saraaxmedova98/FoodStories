@@ -184,6 +184,9 @@ class StoryDetail(FormMixin,DetailView):
         context['stories'] = Story.objects.all()[:3]
         context['story_images'] = StoryImage.objects.all()
         context['tags']= Story.tags.most_common()
+        searched_word = self.request.GET.get('q')
+        if searched_word is not None:
+            context['search_word'] = searched_word
         
         return context
 
@@ -298,12 +301,14 @@ class RecipeDetail(FormMixin ,DetailView):
         context["categories"] = Category.objects.all()
         context['recipes'] = Recipe.objects.all()[:3]
         context['tags']= Recipe.tags.most_common()
+        searched_word = self.request.GET.get('q')
+        if searched_word is not None:
+            context['search_word'] = searched_word
         return context
 
     def get_object(self):
         recipe_count = super().get_object()
         # Record the last accessed date
-        print("salam")
         # print(self.request.user.profile.whatever)
         recipe_count.recipe_count += 1
         recipe_count.save()
@@ -323,13 +328,6 @@ class RecipeDetail(FormMixin ,DetailView):
         form.save()
         return super().form_valid(form)
     
-    def get_queryset(self):
-        if self.request.method == 'GET':
-            queryset = Recipe.objects.filter(pk=self.kwargs.get('pk'))
-            title_name = self.request.GET.get('q', None)
-            if title_name is not None:
-                queryset = queryset.filter(description__icontains=title_name)
-            return queryset
 
 class RecipeCreateView(CreateView):
     model = Recipe

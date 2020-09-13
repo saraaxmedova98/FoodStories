@@ -3,7 +3,7 @@
     Recipe Detail
     {% endblock title %}
 {% block middle_container %}
-{% load static %}
+{% load static custom-tags %}
 
 {% if recipe.cover_image %}
     <section class="hero-wrap hero-wrap-2" style="background-image: url({{ recipe.cover_image.url }});">
@@ -41,9 +41,13 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 order-lg-last ftco-animate">
-                <h2 class="mb-3">It is a long established fact a reader be distracted</h2>
-                <p>{{recipe.description}}
-                </p>
+                {% if search_word %}
+                <h2 class="mb-3">{{recipe.title|highlight_search:search_word}}</h2>
+                <p>{{recipe.description|highlight_search:search_word}}</p>
+                {% else %}
+                <h2 class="mb-3">{{recipe.title}}</h2>
+                <p>{{recipe.description}}</p>
+                {% endif %}
                 <p>
                     {% if recipe.recipe_image %}
                     <img src="{{recipe.recipe_image.url}}" alt="" class="img-fluid">
@@ -228,7 +232,7 @@
             </div> <!-- .col-md-8 -->
             <div class="col-lg-4 sidebar pr-lg-5 ftco-animate">
                 <div class="sidebar-box">
-                    <form action="#" method='GET' class="search-form">
+                    <form action="#" class="search-form">
                         <div class="form-group">
                             <span class="icon icon-search"></span>
                             <input type="text" class="form-control" placeholder="Type a keyword and hit enter" name='q'>

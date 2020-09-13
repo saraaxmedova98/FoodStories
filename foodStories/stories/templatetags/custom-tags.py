@@ -2,7 +2,15 @@ from django import template
 from stories.forms import SubscribeForm
 from stories.models import *
 import datetime
+from django.utils.safestring import SafeData, SafeString, mark_safe
 register = template.Library()
+
+@register.filter
+def highlight_search(text, search):
+    highlighted = text.replace(search, f'<span class="highlight">{search}</span>')
+    
+    return mark_safe(highlighted)
+
 
 @register.simple_tag
 def subscribe_form():
@@ -48,3 +56,5 @@ def story_title():
 def recipe_title():
     
     return Recipe.objects.all()
+
+
