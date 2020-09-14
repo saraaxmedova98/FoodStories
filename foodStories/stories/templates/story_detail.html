@@ -253,7 +253,7 @@
                     <h3 class="heading mb-4">Tag Cloud</h3>
                     <div class="tagcloud">
                     {% for tag in tags %}
-                     <a href="#" class="tag-cloud-link">{{tag}}</a>
+                     <a href="{% url 'stories:story_tags' tag.name  %}" class="tag-cloud-link">{{tag}}</a>
                     {% endfor %}
                     </div>
                 </div>

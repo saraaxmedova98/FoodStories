@@ -1,10 +1,9 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import HttpResponse
-from stories.forms import ContactForm, SubscribeForm, StoryForm , RecipeForm, CommentForm, SumForm
+from stories.forms import *
 from django.views import View
 from django.views.generic import ListView, DetailView, TemplateView
-from stories.models import Recipe, Story, StoryImage, Category, Contact, Comment, SumNumbers,\
-     Subscribe, TaggedStory
+from stories.models import *
 from account.models import CustomUser
 from django.db.models import Count
 from django.utils import timezone
@@ -22,7 +21,7 @@ from stories.api.serializers import StoryModelSerializer
 from stories.tasks import add , subscribers_email
 from account.forms import ProfileSearchForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+import inspect
 # Create your views here.
 
 User = get_user_model()
@@ -104,7 +103,7 @@ class StoryList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.order_by('id')[:3]
-       
+        print()
         return context
     
     def get_queryset(self):
@@ -135,7 +134,28 @@ class StoryCategoryList(ListView):
                 queryset = queryset.filter(title__icontains=title_name)
             return queryset
         return Story.objects.filter(category=self.category)
-        
+
+class StoryTagList(ListView):
+    model = Story
+    context_object_name = 'stories'
+    template_name='stories.html'
+    paginate_by = 6
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()[:3]
+       
+        return context
+
+    def get_queryset(self):
+        self.tag = get_object_or_404(Tag, name=self.kwargs['name'])
+        if self.request.method == 'GET':
+            queryset = Story.objects.filter(tags = self.tag)
+            title_name = self.request.GET.get('q', None)
+            if title_name is not None:
+                queryset = queryset.filter(title__icontains=title_name)
+            return queryset
+        return Story.objects.filter(tags=self.tag)        
 
 class StoryFilterView(ListView):
     model = Story
@@ -255,7 +275,27 @@ class RecipeCategoriesList(ListView):
                 queryset = queryset.filter(title__icontains=title_name)
             return queryset
         return Recipe.objects.filter(category=self.category)
+
+class RecipeTagList(ListView):
+    context_object_name = 'recipes'
+    template_name='recipes.html'
+    paginate_by = 6
     
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = Category.objects.all()[:3]
+       
+        return context
+
+    def get_queryset(self):
+        self.tag = get_object_or_404(Tag, name=self.kwargs['name'])
+        if self.request.method == 'GET':
+            queryset = Recipe.objects.filter(tags = self.tag)
+            title_name = self.request.GET.get('q', None)
+            if title_name is not None:
+                queryset = queryset.filter(title__icontains=title_name)
+            return queryset
+        return Recipe.objects.filter(tags=self.tag)    
 
 class RecipeFilterView(ListView):
     model = Recipe
