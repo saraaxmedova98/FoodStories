@@ -4,6 +4,17 @@
     {% endblock title %}
 {% block middle_container %}
 {% load static %}
+<script src="{% static 'js/jquery.min.js' %}"></script>
+
+<script>
+    for (let index = 0; index < $('.nav-link').length; index++) {
+        if($($('.nav-link')[index]).text() == 'Home'){
+            $('.nav-link').css('color', '#000')
+            $($('.nav-link')[index]).css('color', 'rgba(0,0,0,.5)')
+        }
+        
+    }
+</script>
     <section class="home-slider owl-carousel">
        {% for story in all_stories %}
         <div class="slider-item">

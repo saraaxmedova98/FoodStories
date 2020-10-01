@@ -56,11 +56,11 @@
             <a class="navbar-brand" href="{% url 'stories:home' %}">Stories<span>.</span></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="oi oi-menu"></span> Menu
-        </button>
+            </button>
 
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item active"><a href="{% url 'stories:home' %}" class="nav-link">Home</a></li>
+                    <li class="nav-item"><a href="{% url 'stories:home' %}" class="nav-link">Home</a></li>
                     <li class="nav-item"><a href="{% url 'stories:about' %}" class="nav-link">About</a></li>
                     <li class="nav-item"><a href="{% url 'stories:stories' %}" class="nav-link">Stories</a></li>
                     <li class="nav-item"><a href="{% url 'stories:recipes' %}" class="nav-link">Recipes</a></li>
@@ -103,12 +103,6 @@
     <script src="{% static 'js/taginputs.js' %}"></script>
 
     <script>
-        $(document).ready(function(){
-           console.log( )
-        })
-        $('#ftco-nav').find('a.nav-link').on('click',function(){
-                console.log($(this), 'ddddddd');
-        })
         document.querySelectorAll('form#storyFilter > select').forEach(select_element => {
             select_element.addEventListener('change', ()=>{
                 console.log(select_element.value);
