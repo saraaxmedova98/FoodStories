@@ -60,14 +60,14 @@
 
             <div class="collapse navbar-collapse" id="ftco-nav">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item"><a href="{% url 'stories:home' %}" class="nav-link">Home</a></li>
-                    <li class="nav-item"><a href="{% url 'stories:about' %}" class="nav-link">About</a></li>
-                    <li class="nav-item"><a href="{% url 'stories:stories' %}" class="nav-link">Stories</a></li>
-                    <li class="nav-item"><a href="{% url 'stories:recipes' %}" class="nav-link">Recipes</a></li>
-                    <li class="nav-item"><a href="{% url 'stories:contact' %}" class="nav-link">Contact</a></li>
+                    <li class="nav-item"><a href="{% url 'stories:home' %}" class="nav-link" {% if request.path == '/' %} style = 'color : rgba(0,0,0,.5)'{% endif %}>Home</a></li>
+                    <li class="nav-item"><a href="{% url 'stories:about' %}" class="nav-link" {% if request.path == '/about/' %} style = 'color : rgba(0,0,0,.5)'{% endif %} >About</a></li>
+                    <li class="nav-item"><a href="{% url 'stories:stories' %}" class="nav-link" {% if request.path == '/stories/' %} style = 'color : rgba(0,0,0,.5)'{% endif %}>Stories</a></li>
+                    <li class="nav-item"><a href="{% url 'stories:recipes' %}" class="nav-link" {% if request.path == '/recipes/' %} style = 'color : rgba(0,0,0,.5)'{% endif %}>Recipes</a></li>
+                    <li class="nav-item"><a href="{% url 'stories:contact' %}" class="nav-link" {% if request.path == '/contact/' %} style = 'color : rgba(0,0,0,.5)'{% endif %}>Contact</a></li>
                      {% if request.user.is_authenticated %}
                     <li><a href="{% url 'account:logout' %}" class="btn btn-black px-3 px-md-4 py-3">Logout</a></li>
-                    <li class="nav-item"><a href="{% url 'account:user_profile' user.pk %}" class="nav-link"><i class="fas fa-user-circle"></i></a></li>
+                    <li class="nav-item"><a href="{% url 'account:user_profile' user.pk %}" class="nav-link" ><i class="fas fa-user-circle"></i></a></li>
                     {% else %}
                     <li><a href="{% url 'account:login' %}" class="btn btn-black px-3 px-md-4 py-3">Sign in</a></li>
                     {% endif %}
@@ -103,6 +103,11 @@
     <script src="{% static 'js/taginputs.js' %}"></script>
 
     <script>
+        $('#form_one').on('submit',function(e){
+            console.log('ok')
+            e.preventDefault();
+            console.log('ok')
+        })
         document.querySelectorAll('form#storyFilter > select').forEach(select_element => {
             select_element.addEventListener('change', ()=>{
                 console.log(select_element.value);
@@ -184,6 +189,7 @@
                     
             })
         })
+        
     </script>
 <script>
 var ctx = document.getElementById('myChart').getContext('2d');

@@ -199,11 +199,13 @@ class StoryDetail(FormMixin,DetailView):
         # post = get_object_or_404(Story, id=pk)
         # photos = StoryImage.objects.filter(story=Story.objects.filter(id = 3))
         # print(photos)
+        story = Story.objects.filter(pk=self.kwargs.get('pk'))
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         context['stories'] = Story.objects.all()[:3]
         context['story_images'] = StoryImage.objects.all()
         context['tags']= Story.tags.most_common()
+        context['comments'] = story.first().comment.filter(comment_reply__isnull=True)
         searched_word = self.request.GET.get('q')
         if searched_word is not None:
             context['search_word'] = searched_word
@@ -226,8 +228,24 @@ class StoryDetail(FormMixin,DetailView):
         else:
             return self.form_invalid(form)
     def form_valid(self, form):
+        parent_obj = None
+            # get parent comment id from hidden input
+        try:
+            # id integer e.g. 15
+            parent_id = int(self.request.POST.get('parent_id'))
+            print(parent_id)
+        except:
+            parent_id = None
+        if parent_id:
+                parent_obj = Comment.objects.get(id=parent_id)
+                print(parent_obj)
+                replay_comment = form.save(commit=False)
+                # assign parent_obj to replay comment
+                replay_comment.comment_reply = parent_obj
+                replay_comment.active = False
         comment = form.save(commit=False)
         comment.story = get_object_or_404(Story, pk=self.kwargs.get('pk'))
+        comment.active = True
         comment.save()
         return super().form_valid(form)
 
@@ -334,13 +352,17 @@ class RecipeDetail(FormMixin ,DetailView):
   
 
     def get_success_url(self):
-        return reverse_lazy('recipe_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('stories:recipe_detail', kwargs={'pk': self.object.pk})
 
     def get_context_data(self, **kwargs):
+        story = Recipe.objects.filter(pk=self.kwargs.get('pk'))
+
         context = super().get_context_data(**kwargs)
         context["categories"] = Category.objects.all()
         context['recipes'] = Recipe.objects.all()[:3]
         context['tags']= Recipe.tags.most_common()
+        context['comments'] = story.first().comment.filter(comment_reply__isnull=True)
+
         searched_word = self.request.GET.get('q')
         if searched_word is not None:
             context['search_word'] = searched_word
@@ -365,7 +387,25 @@ class RecipeDetail(FormMixin ,DetailView):
             return self.form_invalid(form)
 
     def form_valid(self, form):
-        form.save()
+        parent_obj = None
+            # get parent comment id from hidden input
+        try:
+            # id integer e.g. 15
+            parent_id = int(self.request.POST.get('parent_id'))
+            print(parent_id)
+        except:
+            parent_id = None
+        if parent_id:
+                parent_obj = Comment.objects.get(id=parent_id)
+                print(parent_obj)
+                replay_comment = form.save(commit=False)
+                # assign parent_obj to replay comment
+                replay_comment.comment_reply = parent_obj
+                replay_comment.active = False
+        comment = form.save(commit=False)
+        comment.recipe = get_object_or_404(Recipe, pk=self.kwargs.get('pk'))
+        comment.active = True
+        comment.save()
         return super().form_valid(form)
     
 

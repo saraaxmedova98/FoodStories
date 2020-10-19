@@ -28,10 +28,17 @@ class ProfileSearchForm(forms.Form):
    
 
 class RegisterForm(UserCreationForm):
-
+    password1 = forms.CharField(required=True, widget = forms.PasswordInput(attrs={
+                    'class': 'form-control',
+                    'placeholder' : 'Password'
+                }), label = 'Password')
+    password2 = forms.CharField(required=True, widget = forms.PasswordInput(attrs={
+                    'class': 'form-control',
+                    'placeholder' : 'Confirm Password'
+                }), label = 'Confirm Password')
     class Meta:
         model = User
-        fields = ('username', 'first_name', 'last_name', 'email', 'password1', 'password2', )
+        fields = ('username', 'first_name', 'last_name', 'email', )
         widgets = {
              'first_name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -48,14 +55,6 @@ class RegisterForm(UserCreationForm):
             'email': forms.EmailInput(attrs={
                 'class': 'form-control',
                 'placeholder' : 'Email'
-            }),
-            'password1': forms.PasswordInput(attrs={
-                'class': 'form-control',
-                'placeholder' : 'Password'
-            }),
-            'password2': forms.PasswordInput(attrs={
-                'class': 'form-control',
-                'placeholder' : 'Confirm Password'
             }),
             
         }
@@ -115,8 +114,8 @@ class UserPasswordChangeForm(PasswordChangeForm):
         'placeholder' : 'Cinfirm Password'
     }), required=True)
 
-    class Meta:
-        fields = ('old_password', 'new_password', 'confirm_new_password', )
+    # class Meta:
+    #     fields = ('old_password', 'new_password', 'confirm_new_password', )
 
 
 class ResetPasswordForm(PasswordResetForm):

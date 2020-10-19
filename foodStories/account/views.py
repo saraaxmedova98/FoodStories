@@ -2,8 +2,7 @@ from django.shortcuts import render
 from django.views.generic import TemplateView, DetailView
 from django.views.generic.edit import  CreateView, UpdateView,FormMixin
 from django.contrib.auth import get_user_model
-from account.forms import RegisterForm, LoginForm, UserEditForm, UserPasswordChangeForm,ResetPasswordForm,\
-    CustomResetPasswordForm, ProfileSearchForm
+from account.forms import *
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView,\
@@ -50,7 +49,7 @@ class UpdateUserView(UpdateView):
         return reverse_lazy('account:user_profile', kwargs={'pk': self.object.pk})
 
 class UserLoginView(LoginView):
-    template_name = 'registration/login.html'
+    template_name = 'accounts/login.html'
     form_class = LoginForm
     success_url = reverse_lazy("stories:home")
 

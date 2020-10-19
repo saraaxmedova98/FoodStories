@@ -86,13 +86,13 @@ class RecipeAdmin(admin.ModelAdmin):
 
 @admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
-    list_display = ['name','email', 'message', 'recipe', 'story']
+    list_display = ['name','email', 'message','active', 'recipe', 'story']
     ordering = ['message']
     search_fields = ['message']
     list_filter = ['commented_at', 'recipe', 'story']
     fieldsets = (
         ('Required Fields', {
-            "fields": ('name','email','message',),
+            "fields": ('name','email','message', 'active',),
         }),
         ('Relational Fields', {
             "fields": ('comment_reply','recipe', 'story',),

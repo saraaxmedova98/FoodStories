@@ -98,7 +98,8 @@ class Comment(models.Model):
     email = models.EmailField(_("Email"), max_length=254)
     message = models.TextField(_("Description"))
     commented_at = models.DateField(_("Commented at"), auto_now_add=True)
-    
+    active = models.BooleanField(default=False)
+
     comment_reply = models.ForeignKey("self", verbose_name=_("Comment"), on_delete=models.CASCADE, blank=True, null = True, related_name='replies')
     recipe = models.ForeignKey("stories.Recipe", verbose_name=_("Recipe"), on_delete=models.CASCADE, blank=True, null=True, related_name='comment')
     story = models.ForeignKey("stories.Story", verbose_name=_("Story"), on_delete=models.CASCADE, blank=True, null=True, related_name='comment')

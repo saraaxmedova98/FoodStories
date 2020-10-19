@@ -91,19 +91,20 @@
                     <h3 class="mb-5">{{story.comment.all.count}} Comments</h3>
 
                     <ul class="comment-list">
-                        {% for comment in story.comment.all %}
+                        {% for comment in comments %}
                         <li class="comment">
                             <div class="vcard bio">
                                 <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder">
                             </div>
                             <div class="comment-body">
-                                <h3>{{comment.name}}</h3>
+                                <h3>{{comment.name}} </h3>
                                 <div class="meta">{{comment.commented_at}}</div>
                                 <p>{{comment.message|linebreaks}}</p>
                                 <p><a class="reply reply-comment">Reply</a></p>
                                  <div class="comment-form-wrap pt-5 disp-none ">
                                 <h3 class="mb-5">Reply a comment</h3>
-                                <form class="p-5 bg-light" method="POST">
+                                
+                                <form class="p-5 bg-light" method="POST" id="form_one">
                                     {% csrf_token %}    
                                         <div class="form-group">
                                             {{form.name.label_tag}}
@@ -121,64 +122,30 @@
                                             {{form.message.errors}}
                                         </div>
                                         <div class="form-group">
+                                            <input type="hidden" name="parent_id" value="{{comment.id }}">
                                             <input type="submit" value="Post Comment" class="btn py-3 px-4 btn-primary">
                                         </div>
             
                                     </form>
                             </div>
                             </div>
-                           {% if comment.comment_reply %}
-                            <ul class="children">
-                                <li class="comment">
-                                    <div class="vcard bio">
-                                        <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder">
-                                    </div>
-                                    <div class="comment-body">
-                                        <h3>{{comment.comment_reply.name}}</h3>
-                                        <div class="meta">{{comment.comment_reply.commented_at}}</div>
-                                        <p>{{comment.comment_reply}}</p>
-                                        <p><a href="#" class="reply">Reply</a></p>
-                                        
-                                    </div>
+                            {% for reply in comment.replies.all %}
+                                <ul class="children">
+                                    <li class="comment">
+                                        <div class="vcard bio">
+                                            <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder">
+                                        </div>
+                                        <div class="comment-body">
+                                            <h3>{{reply.name}}</h3>
+                                            <div class="meta">{{reply.commented_at}}</div>
+                                            <p>{{reply.message|linebreaks}}</p>
+                                            <!-- <p><a href="#" class="reply">Reply</a></p> -->
+                                        </div>
 
-
-                                    <!-- <ul class="children">
-                                        <li class="comment">
-                                            <div class="vcard bio">
-                                                <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder">
-                                            </div>
-                                            <div class="comment-body">
-                                                <h3>John Doe</h3>
-                                                <div class="meta">October 03, 2018 at 2:21pm</div>
-                                                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Pariatur
-                                                    quidem laborum necessitatibus, ipsam impedit vitae autem, eum
-                                                    officia, fugiat saepe enim sapiente iste iure! Quam voluptas earum
-                                                    impedit necessitatibus, nihil?</p>
-                                                <p><a href="#" class="reply">Reply</a></p>
-                                            </div>
-
-                                            <ul class="children">
-                                                <li class="comment">
-                                                    <div class="vcard bio">
-                                                        <img src="{% static 'images/person_1.jpg' %}" alt="Image placeholder">
-                                                    </div>
-                                                    <div class="comment-body">
-                                                        <h3>John Doe</h3>
-                                                        <div class="meta">October 03, 2018 at 2:21pm</div>
-                                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                                                            Pariatur quidem laborum necessitatibus, ipsam impedit vitae
-                                                            autem, eum officia, fugiat saepe enim sapiente iste iure!
-                                                            Quam voluptas earum impedit necessitatibus, nihil?</p>
-                                                        <p><a href="#" class="reply">Reply</a></p>
-                                                    </div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul> -->
-                                </li>
-                            </ul>
-                           {% endif %}
-                          
+                                    </li>
+                                </ul>
+                            
+                            {% endfor %}
                         </li>
                         {% endfor %}
                     </ul>
