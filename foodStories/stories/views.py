@@ -29,13 +29,16 @@ User = get_user_model()
 class HomeView(FormMixin, TemplateView):
     template_name = "index.html"
     form_class = ProfileSearchForm
+    # categories = [Category(**{"title": "cat-{}".format(i)}) for i in range(10)]
+    # Category.objects.bulk_create(categories)
+    # Category.objects.exclude(title__in = ['Beans', 'Main Dish']).delete()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         print(self.request.user)
         context['user_profile'] = User.objects.get_or_create(email = self.request.user)
         context['categories'] = Category.objects.all()[:3]
-        context['all_stories'] = Story.objects.all()
+        context['all_stories'] = Story.objects.order_by('-created_at')
 
         story_list = []
         for story in Story.objects.all():
@@ -55,7 +58,8 @@ class HomeView(FormMixin, TemplateView):
             context["recipes"] = Recipe.objects.all()[:2]
             context['user_stories'] = Story.objects.filter(user = self.request.user)[:3]
         return context
-       
+
+
 class AboutView(TemplateView):
     template_name = "about.html"
 
@@ -82,10 +86,12 @@ class StoryCreateView(CreateView):
         messages.warning(self.request, 'Something went wrong!!')
         return super().form_invalid(form)
 
+
 class StoryUpdateView(UpdateView):
     model = Story
     template_name = "create_story.html"
     form_class = StoryForm
+
 
 class StoryDeleteView(DeleteView):
     model = Story
@@ -114,6 +120,7 @@ class StoryList(ListView):
                 queryset = queryset.filter(title__icontains=title_name)
             return queryset
 
+
 class StoryCategoryList(ListView):
     context_object_name = 'stories'
     template_name='stories.html'
@@ -134,6 +141,7 @@ class StoryCategoryList(ListView):
                 queryset = queryset.filter(title__icontains=title_name)
             return queryset
         return Story.objects.filter(category=self.category)
+
 
 class StoryTagList(ListView):
     model = Story
@@ -156,6 +164,7 @@ class StoryTagList(ListView):
                 queryset = queryset.filter(title__icontains=title_name)
             return queryset
         return Story.objects.filter(tags=self.tag)        
+
 
 class StoryFilterView(ListView):
     model = Story
@@ -249,6 +258,7 @@ class StoryDetail(FormMixin,DetailView):
         comment.save()
         return super().form_valid(form)
 
+
 class RecipeList(ListView):
     model = Recipe
     context_object_name = 'recipes'
@@ -269,7 +279,6 @@ class RecipeList(ListView):
             if title_name is not None:
                 queryset = queryset.filter(title__icontains=title_name)
             return queryset
-
 
 
 class RecipeCategoriesList(ListView):
@@ -294,6 +303,7 @@ class RecipeCategoriesList(ListView):
             return queryset
         return Recipe.objects.filter(category=self.category)
 
+
 class RecipeTagList(ListView):
     context_object_name = 'recipes'
     template_name='recipes.html'
@@ -314,6 +324,7 @@ class RecipeTagList(ListView):
                 queryset = queryset.filter(title__icontains=title_name)
             return queryset
         return Recipe.objects.filter(tags=self.tag)    
+
 
 class RecipeFilterView(ListView):
     model = Recipe

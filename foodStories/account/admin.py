@@ -3,6 +3,12 @@ from django.contrib.auth.admin import UserAdmin
 from account.forms import CustomUserCreationForm, CustomUserChangeForm
 from account.models import CustomUser
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import  Group
+from django.utils.safestring import mark_safe
+
+
+admin.site.unregister(Group)
+
 # Register your models here.
 
 User = get_user_model()
@@ -26,5 +32,7 @@ class CustomUserAdmin(UserAdmin):
     search_fields = ('email',)
     ordering = ('email',)
 
+    
 
+    
 admin.site.register(User, CustomUserAdmin)

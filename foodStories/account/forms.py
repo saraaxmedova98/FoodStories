@@ -111,11 +111,11 @@ class UserPasswordChangeForm(PasswordChangeForm):
     }), required=True)
     confirm_new_password = forms.CharField(widget = forms.PasswordInput(attrs={
         'class': 'form-control',
-        'placeholder' : 'Cinfirm Password'
+        'placeholder' : 'Confirm Password'
     }), required=True)
 
-    # class Meta:
-    #     fields = ('old_password', 'new_password', 'confirm_new_password', )
+    class Meta:
+        fields = ('old_password', 'new_password', 'confirm_new_password', )
 
 
 class ResetPasswordForm(PasswordResetForm):

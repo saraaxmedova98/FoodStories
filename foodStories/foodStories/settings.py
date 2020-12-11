@@ -110,7 +110,7 @@ DATABASES = {
     }
 }
 
-
+# docker rm -f $(docker ps -a -q)
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -196,7 +196,6 @@ EMAIL_USE_TLS = False
 EMAIL_USE_SSL = True
 
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
-# LIST_OF_EMAIL_RECIPIENTS = ['sara.axmedova98@gmail.com']
 
 
 # Celery stuff

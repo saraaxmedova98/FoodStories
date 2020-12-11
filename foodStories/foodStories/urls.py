@@ -17,7 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib import admin 
 
+admin.site.site_header = "Foodstories Admin"
+admin.site.site_title = "Foodstories Admin site"
+admin.site.index_title = "Welcome to Foodstories admin site"
 
 urlpatterns = [
     path('jet/', include('jet.urls', 'jet')),

@@ -38,6 +38,9 @@ class Story(models.Model):
     def get_absolute_url(self):
         return reverse('stories:story_detail', kwargs={'pk': self.pk})
 
+    def comment_count(self,):
+        return self.comment.all().count()
+
 
 class StoryImage(models.Model):
     images = models.ImageField(_("Story image"), upload_to='stories/')
@@ -49,6 +52,7 @@ class StoryImage(models.Model):
 
     def __str__(self):
         return self.story.title
+
 
 class TaggedRecipe(TaggedItemBase):
     content_object = models.ForeignKey('Recipe', on_delete=models.CASCADE, related_name='recipe')
@@ -80,7 +84,6 @@ class Recipe(models.Model):
         return reverse('stories:recipe_detail', kwargs={'pk': self.pk})
     
 
-    
 class Category(models.Model):
     title = models.CharField(_("Title"), max_length=50, default="")
     image = models.ImageField(_("Image"), upload_to='categories/', blank=True, null=True)
@@ -111,6 +114,7 @@ class Comment(models.Model):
     
     def __str__(self):
         return self.message
+
 
 class Contact(models.Model):
     name = models.CharField(_("Name"), max_length=50)

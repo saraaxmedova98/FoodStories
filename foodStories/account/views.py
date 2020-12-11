@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView, PasswordResetView,\
     PasswordResetConfirmView
-from stories.models import Recipe, Story
+from stories.models import *
 from django.shortcuts import redirect
 # Create your views here.
 
@@ -54,8 +54,9 @@ class UserLoginView(LoginView):
     success_url = reverse_lazy("stories:home")
 
 class UserPasswordChangeView(PasswordChangeView):
-    template_name = 'accounts/change_password.html'
+    # models = User
     form_class = UserPasswordChangeForm
+    template_name = 'accounts/change_password.html'
     success_url = reverse_lazy('account:password_change_done')
 
 

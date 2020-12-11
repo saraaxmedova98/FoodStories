@@ -1,6 +1,5 @@
 from django.urls import path, re_path
-from account.views import CreateRegisterView, UpdateUserView,UserLoginView, UserProfileView,\
-    UserPasswordChangeView, UserPasswordChangeDoneView, UserPasswordResetView, UserPasswordResetConfirmView
+from account.views import *
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth import views as auth_views
 
@@ -10,8 +9,8 @@ urlpatterns = [
     path('register/',CreateRegisterView.as_view(), name='register' ),
     path('login/',UserLoginView.as_view(), name='login' ),
     path('logout/',LogoutView.as_view(), name='logout' ),
-    path('change-password/',UserPasswordChangeView.as_view(), name='change_password' ),
-    path('change-password-done/',UserPasswordChangeDoneView.as_view(), name='password_change_done' ),
+    path('change_password/',UserPasswordChangeView.as_view(), name='change_password' ),
+    path('change_password_done/',UserPasswordChangeDoneView.as_view(), name='password_change_done' ),
     path("profile/<int:pk>", UserProfileView.as_view()  , name="user_profile"),
     path("update/<int:pk>", UpdateUserView.as_view(), name="update_user_info"),
     path("forget-password/", UserPasswordResetView.as_view(), name="forget_password"),

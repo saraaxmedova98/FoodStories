@@ -4,17 +4,6 @@
     {% endblock title %}
 {% block middle_container %}
 {% load static %}
-<script src="{% static 'js/jquery.min.js' %}"></script>
-
-<script>
-    for (let index = 0; index < $('.nav-link').length; index++) {
-        if($($('.nav-link')[index]).text() == 'Home'){
-            $('.nav-link').css('color', '#000')
-            $($('.nav-link')[index]).css('color', 'rgba(0,0,0,.5)')
-        }
-        
-    }
-</script>
     <section class="home-slider owl-carousel">
        {% for story in all_stories %}
         <div class="slider-item">
@@ -29,8 +18,8 @@
                     <div class="text d-flex align-items-center ftco-animate">
                         <div class="text-2 pb-lg-5 mb-lg-4 px-4 px-md-5">
                             <h3 class="subheading mb-3">Featured Posts</h3>
-                            <h1 class="mb-5">{{story.title}}</h1>
-                            <p class="mb-md-5">{{story.description}}</p>
+                            <h1 class="mb-5">{{story.title|truncatechars:14}}</h1>
+                            <p class="mb-md-5">{{story.description|truncatechars:150}}</p>
                             <p><a href="{% url 'stories:story_detail' story.pk %}" class="btn btn-black px-3 px-md-4 py-3">Read More <span
                                 class="icon-arrow_forward ml-lg-4"></span></a></p>
                         </div>
@@ -124,7 +113,9 @@
                     {% if user.is_authenticated %}
                     <div class="row">
                         <div class="col-md-12 heading-section ftco-animate">
-                            <h2 class="mb-4"><span>My Stories</span></h2>
+                            {% if user_stories %}
+                                <h2 class="mb-4"><span>My Stories</span></h2>
+                            {% endif %}
                         </div>
                     </div>
                 
